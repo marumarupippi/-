@@ -4,397 +4,1152 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>わたしの美術館 | あなたの一枚が名画になる</title>
+<title>ATELIER — Your Private Gallery</title>
+<meta name="theme-color" content="#eae7e0">
 <style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap');
+
+:root{
+  --paper:#eae7e0;
+  --ink:#242522;
+  --muted:#77756e;
+  --line:#cbc7bf;
+  --accent:#7e6651;
+}
 *{box-sizing:border-box}
-body{margin:0;font-family:"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;background:#f5f0e7;color:#45392d}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"DM Sans","Hiragino Kaku Gothic ProN",sans-serif;
+}
 button,input,textarea{font:inherit}
 button{cursor:pointer}
-.screen{display:none;min-height:100vh}
-.screen.active{display:flex}
-#home{flex-direction:column;justify-content:center;align-items:center;padding:35px 20px;text-align:center;background:radial-gradient(circle at top,#fffdf7,#e8dccb)}
-.logo{font-size:12px;letter-spacing:4px;color:#a48a65}
-h1{font-family:Georgia,serif;font-size:clamp(38px,9vw,70px);margin:20px 0 10px}
-.subtitle{line-height:2;color:#806e5a}
-.form{width:min(440px,100%);background:#fffdf8;padding:25px;border:1px solid #dfd1b9;border-radius:16px;margin-top:25px;box-shadow:0 15px 45px #57432b15}
-.preview{width:100%;height:190px;border:2px dashed #c9b99e;border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;background:#f8f4ec;color:#9b866b}
-.preview img{width:100%;height:100%;object-fit:contain}
-input[type=file]{display:none}
-.field{width:100%;padding:13px;margin-top:13px;border:1px solid #d7cbb9;border-radius:7px;background:white}
-textarea.field{resize:vertical;min-height:70px}
-.primary{width:100%;margin-top:16px;border:0;background:#493b2c;color:white;padding:16px;border-radius:8px;font-weight:bold}
-.primary:hover{background:#72583a}
-.note{font-size:12px;color:#978673;line-height:1.7}
-
-/* 展示室 */
-#museum{position:relative;overflow:hidden;flex-direction:column;background:#25221e;color:white}
-.gallery{position:relative;width:100%;height:100vh;height:100dvh;overflow:hidden;perspective:900px;background:#27231e}
-.room{position:absolute;inset:-12%;transform-origin:50% 42%;background:radial-gradient(ellipse at 50% 25%,#e8dec9 0%,#bcb09d 48%,#847665 100%)}
-.room.zoom{animation:approach 5.5s cubic-bezier(.18,.65,.3,1) forwards}
-@keyframes approach{
-from{transform:scale(.55) translateY(12%);filter:brightness(.65)}
-to{transform:scale(1.15) translateY(0);filter:brightness(1)}
+button:focus-visible,input:focus-visible,textarea:focus-visible{
+  outline:2px solid #9b7957;
+  outline-offset:4px;
 }
-.wall-line{position:absolute;top:72%;left:0;width:100%;height:8px;background:#766a5c;box-shadow:0 5px 18px #493f34}
-.floor{position:absolute;top:73%;width:100%;height:40%;background:repeating-linear-gradient(90deg,#65584a 0 110px,#594e42 112px 115px);transform:perspective(400px) rotateX(50deg);transform-origin:top}
-.light{position:absolute;top:-8%;left:50%;transform:translateX(-50%);width:min(70vw,650px);height:75%;background:linear-gradient(#fff4c477,transparent);clip-path:polygon(46% 0,54% 0,100% 100%,0 100%);pointer-events:none}
-.artwork{position:absolute;top:14%;left:50%;transform:translateX(-50%);width:min(45vw,310px);z-index:2;text-align:center}
-.frame{border:13px ridge #ad8746;padding:10px;background:#f7f0df;box-shadow:0 10px 25px #30251d88,inset 0 0 10px #6c4a1c}
-.frame img{width:100%;height:min(36vh,300px);object-fit:contain;display:block;background:#e9dfcb}
-.plaque{display:inline-block;background:#d3bb83;color:#382d1e;margin-top:15px;padding:9px 17px;font-family:Georgia,serif;font-size:14px;box-shadow:0 3px 8px #0003;max-width:100%;overflow-wrap:anywhere}
-.visitors{position:absolute;inset:0;z-index:5;pointer-events:none}
-.person{position:absolute;bottom:2%;width:42px;height:135px;transform-origin:bottom;opacity:0;transition:opacity .6s,transform .6s}
-.person.visible{opacity:1}
-.head{position:absolute;top:0;left:11px;width:23px;height:26px;border-radius:50%;background:var(--person-color,#292b2e)}
-.body-shape{position:absolute;top:25px;left:4px;width:37px;height:70px;background:var(--person-color,#292b2e);border-radius:15px 15px 5px 5px}
-.leg{position:absolute;top:86px;width:13px;height:49px;background:var(--person-color,#292b2e);border-radius:0 0 5px 5px}
-.leg.left{left:8px}.leg.right{right:6px}
-.person.walking{animation:sway 1.1s ease-in-out infinite alternate}
-@keyframes sway{from{rotate:-3deg}to{rotate:3deg}}
-.camera{position:absolute;top:37px;left:25px;width:18px;height:12px;border-radius:3px;background:#777;border:3px solid #161616}
-.flash{position:absolute;inset:0;z-index:20;background:white;opacity:0;pointer-events:none}
-.flash.fire{animation:flash .55s}
-@keyframes flash{0%,100%{opacity:0}18%{opacity:.9}}
-.caption-top{position:absolute;top:22px;left:0;right:0;z-index:10;text-align:center;color:#fff5db;font-family:Georgia,serif;letter-spacing:3px;text-shadow:0 2px 10px #000}
-.live{position:absolute;bottom:25px;left:50%;transform:translateX(-50%);z-index:15;background:#1d1b19dd;padding:12px 20px;border-radius:30px;white-space:nowrap;font-size:13px;max-width:95%;overflow:hidden;text-overflow:ellipsis}
+button:disabled{opacity:.5;cursor:not-allowed}
+.screen{display:none;min-height:100vh}
+.screen.active{display:block}
+.serif{font-family:"Playfair Display",Georgia,serif}
+.small-label{
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:2.5px;
+  text-transform:uppercase;
+}
+.nav{
+  height:86px;
+  padding:0 6%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid var(--line);
+}
+.brand{
+  font-family:"Playfair Display",Georgia,serif;
+  font-size:26px;
+  letter-spacing:-1px;
+}
+.nav-right{
+  display:flex;
+  gap:35px;
+  align-items:center;
+}
+.nav-right span{font-size:11px;letter-spacing:1.4px}
+.nav-link{
+  border:0;
+  background:none;
+  font-size:11px;
+  letter-spacing:1.2px;
+  text-decoration:underline;
+  text-underline-offset:6px;
+  color:var(--ink);
+}
+.hero{
+  min-height:calc(100vh - 86px);
+  display:grid;
+  grid-template-columns:1.06fr .94fr;
+}
+.hero-copy{
+  padding:clamp(50px,8vw,120px) 6% 65px 11.3%;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.eyebrow{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  font-size:11px;
+  letter-spacing:2px;
+  color:var(--accent);
+}
+.eyebrow:before{
+  content:"";
+  width:30px;
+  height:1px;
+  background:var(--accent);
+}
+.hero h1{
+  font-family:"Playfair Display",Georgia,serif;
+  font-weight:400;
+  font-size:clamp(55px,7.5vw,126px);
+  letter-spacing:-5px;
+  line-height:.99;
+  margin:42px 0 32px;
+}
+.hero h1 em{
+  font-weight:400;
+  color:var(--accent);
+}
+.hero-description{
+  color:#69665f;
+  font-size:13px;
+  line-height:2.4;
+  max-width:390px;
+}
+.hero-actions{
+  display:flex;
+  align-items:center;
+  gap:25px;
+  margin-top:35px;
+}
+.dark-btn{
+  background:var(--ink);
+  border:1px solid var(--ink);
+  color:#fff;
+  padding:18px 27px;
+  font-size:11px;
+  letter-spacing:1.5px;
+  transition:.3s;
+}
+.dark-btn:hover{background:#65513e;border-color:#65513e}
+.text-link{
+  border:0;
+  background:none;
+  border-bottom:1px solid var(--ink);
+  padding:10px 0;
+  font-size:11px;
+  letter-spacing:1px;
+}
+.hero-visual{
+  position:relative;
+  min-height:640px;
+  overflow:hidden;
+  background:
+    linear-gradient(110deg,#d1c9bb,#b3aa9b 55%,#d0c5b5);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.hero-visual:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse at 53% 22%,#fff8e57a,transparent 60%);
+}
+.visual-floor{
+  position:absolute;
+  bottom:0;
+  width:100%;
+  height:18%;
+  background:linear-gradient(#a69b8d,#c2b5a4);
+  border-top:2px solid #a89c8b;
+}
+.visual-frame{
+  position:relative;
+  width:min(54%,340px);
+  aspect-ratio:3/4;
+  padding:13px;
+  background:linear-gradient(125deg,#7b6245,#c2a783 30%,#72573a 60%,#b99b70);
+  box-shadow:18px 25px 50px #342c2755,0 0 0 2px #5e4c37;
+  transform:translateY(-10%);
+  z-index:2;
+  animation:frameFloat 8s ease-in-out infinite;
+}
+.visual-inner{
+  width:100%;
+  height:100%;
+  border:13px solid #e9e1d3;
+  background:#b6a18a;
+  overflow:hidden;
+}
+.visual-inner img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.visual-placeholder{
+  width:100%;
+  height:100%;
+  background:
+    radial-gradient(ellipse at 45% 35%,#c6b3a1,transparent 55%),
+    linear-gradient(145deg,#777a70,#a6a093 50%,#514f48);
+}
+.visual-caption{
+  position:absolute;
+  left:8%;
+  bottom:8%;
+  z-index:3;
+  color:#f8f3e9;
+  font-size:10px;
+  letter-spacing:2px;
+  line-height:2;
+}
+.visual-number{
+  position:absolute;
+  right:8%;
+  top:8%;
+  color:#f8f3e9;
+  font-family:Georgia,serif;
+  font-size:13px;
+}
+@keyframes frameFloat{
+  0%,100%{transform:translateY(-10%) rotate(-1deg)}
+  50%{transform:translateY(-12%) rotate(.5deg)}
+}
+.marquee{
+  padding:19px 6%;
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  color:#79746c;
+  font-size:10px;
+  letter-spacing:2px;
+}
+.intro{
+  padding:115px 9%;
+  display:grid;
+  grid-template-columns:1fr 1.2fr;
+  gap:12%;
+  align-items:start;
+}
+.intro h2{
+  font-family:"Playfair Display",Georgia,serif;
+  font-weight:400;
+  font-size:clamp(38px,5vw,75px);
+  line-height:1.2;
+  letter-spacing:-2px;
+  margin:0;
+}
+.intro p{
+  color:#77736c;
+  font-size:13px;
+  line-height:2.5;
+  max-width:470px;
+  margin-top:15px;
+}
+.intro .small-label{color:var(--accent);margin-bottom:24px}
+.upload-section{
+  padding:95px 6% 125px;
+  background:#dcd7ce;
+}
+.upload-heading{text-align:center;margin-bottom:50px}
+.upload-heading h2{
+  font-family:"Playfair Display",Georgia,serif;
+  font-size:clamp(40px,6vw,75px);
+  font-weight:400;
+  margin:20px 0;
+}
+.upload-heading p{
+  color:#77736c;
+  font-size:13px;
+  line-height:2;
+}
+.upload-layout{
+  max-width:1060px;
+  margin:auto;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  background:#f1eee8;
+  box-shadow:0 22px 65px #51473818;
+}
+.upload-preview{
+  min-height:480px;
+  padding:35px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#c8c0b4;
+  cursor:pointer;
+  position:relative;
+}
+.upload-preview:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(ellipse at 50% 20%,#fff6e566,transparent 75%);
+}
+.upload-art{
+  position:relative;
+  width:min(75%,290px);
+  aspect-ratio:4/5;
+  padding:10px;
+  background:linear-gradient(135deg,#5f4c37,#b99b72,#5d4934);
+  box-shadow:12px 20px 35px #3a302c55;
+}
+.upload-art-inner{
+  width:100%;
+  height:100%;
+  background:#e6dfd3;
+  border:12px solid #e6dfd3;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  overflow:hidden;
+  color:#93897d;
+  font-size:12px;
+  line-height:2;
+}
+.upload-art-inner img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+.upload-fields{
+  padding:clamp(30px,5vw,65px);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.upload-fields h3{
+  font-family:"Playfair Display",Georgia,serif;
+  font-size:34px;
+  font-weight:400;
+  margin:15px 0 30px;
+}
+.field-label{
+  font-size:10px;
+  letter-spacing:1.5px;
+  margin:18px 0 8px;
+}
+.field{
+  width:100%;
+  padding:14px 0;
+  border:0;
+  border-bottom:1px solid #bbb3a7;
+  outline:0;
+  background:transparent;
+  color:var(--ink);
+  font-size:13px;
+}
+textarea.field{resize:vertical;min-height:70px}
+#photoInput{display:none}
+.upload-note{
+  font-size:11px;
+  color:#888177;
+  line-height:2;
+  margin-top:22px;
+}
+footer{
+  padding:32px 6%;
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  font-size:10px;
+  letter-spacing:1px;
+  color:#77736c;
+}
 
-/* 結果画面 */
-#result{align-items:center;justify-content:center;padding:30px 18px;background:#f4eee3}
-.result-card{background:#fffdf8;border:1px solid #d9c9ad;border-radius:14px;padding:30px 22px;width:min(480px,100%);text-align:center;box-shadow:0 15px 50px #5c45201a}
-.result-photo{width:170px;height:170px;object-fit:contain;border:9px ridge #b79658;background:#eee4d3}
-.big-number{font-family:Georgia,serif;font-size:65px;margin:12px 0 0;color:#9b7540}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:25px 0}
-.stat{padding:15px 8px;background:#f4eee3;border-radius:8px}
-.stat strong{display:block;font-size:24px;margin-top:6px}
-.secondary{background:transparent;border:1px solid #b9a58a;border-radius:8px;padding:13px;width:100%;margin-top:10px;color:#58452f}
-#resultTitle{overflow-wrap:anywhere}
-@media(max-width:600px){
-.artwork{width:57vw;top:19%}
-.frame{border-width:9px;padding:6px}
-.frame img{height:25vh}
-.person{bottom:7%}
+/* 3D 展示室 */
+#museum{
+  position:relative;
+  height:100vh;
+  height:100dvh;
+  background:#141310;
+  overflow:hidden;
+}
+#scene{
+  display:block;
+  width:100%;
+  height:100%;
+}
+.museum-top{
+  position:absolute;
+  z-index:5;
+  top:0;
+  left:0;
+  right:0;
+  padding:30px 5%;
+  display:flex;
+  justify-content:space-between;
+  color:#f4eee3;
+  pointer-events:none;
+}
+.museum-top .brand{font-size:24px}
+.museum-top .small-label{align-self:center}
+.museum-bottom{
+  position:absolute;
+  bottom:40px;
+  left:50%;
+  transform:translateX(-50%);
+  color:#f8f4e9;
+  font-size:11px;
+  letter-spacing:2px;
+  background:#18161299;
+  padding:15px 24px;
+  white-space:nowrap;
+  z-index:5;
+  max-width:95%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.flash{
+  position:absolute;
+  inset:0;
+  background:#fff;
+  opacity:0;
+  pointer-events:none;
+  z-index:6;
+}
+.flash.fire{animation:flash .5s}
+@keyframes flash{
+  0%,100%{opacity:0}
+  18%{opacity:.8}
+}
+
+/* 展示レポート */
+#result{
+  background:#eae7e0;
+  min-height:100vh;
+}
+.result-wrap{
+  max-width:1100px;
+  margin:auto;
+  padding:85px 5% 100px;
+}
+.result-header{
+  display:flex;
+  justify-content:space-between;
+  border-bottom:1px solid var(--line);
+  padding-bottom:24px;
+  gap:15px;
+}
+.result-title{
+  font-family:"Playfair Display",Georgia,serif;
+  font-size:clamp(45px,7vw,95px);
+  font-weight:400;
+  letter-spacing:-3px;
+  line-height:1.1;
+  margin:60px 0;
+}
+.result-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8%;
+  align-items:center;
+}
+.result-image-wrap{
+  background:#c5bbad;
+  padding:12%;
+  box-shadow:0 15px 35px #3b312219;
+}
+.result-image{
+  display:block;
+  width:100%;
+  max-height:480px;
+  object-fit:contain;
+  padding:12px;
+  background:#e6ded0;
+  border:13px ridge #9c7c53;
+}
+.result-info h3{
+  font-family:"Playfair Display",Georgia,serif;
+  font-size:35px;
+  font-weight:400;
+  margin:15px 0;
+  overflow-wrap:anywhere;
+}
+.result-info p{
+  color:#78736a;
+  font-size:13px;
+  line-height:2.2;
+}
+.visitor-number{
+  font-family:"Playfair Display",Georgia,serif;
+  font-size:clamp(75px,10vw,130px);
+  line-height:1.1;
+  margin-top:35px;
+}
+.result-divider{
+  border-top:1px solid var(--line);
+  margin:30px 0;
+}
+.result-actions{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:35px;
+}
+.outline-btn{
+  padding:17px 25px;
+  background:none;
+  border:1px solid #a9a197;
+  color:var(--ink);
+  font-size:11px;
+  letter-spacing:1px;
+}
+.result-footnote{
+  margin-top:40px;
+  color:#898177;
+  font-size:11px;
+  line-height:2;
+}
+@media(max-width:800px){
+  .nav{height:70px}
+  .nav-right span{display:none}
+  .hero{grid-template-columns:1fr}
+  .hero-copy{padding:80px 8%}
+  .hero h1{letter-spacing:-3px}
+  .hero-visual{min-height:490px}
+  .intro{grid-template-columns:1fr;padding:80px 8%;gap:20px}
+  .upload-layout{grid-template-columns:1fr}
+  .upload-preview{min-height:380px}
+  .result-grid{grid-template-columns:1fr;gap:40px}
+  .result-wrap{padding-top:50px}
+  .marquee span:last-child{display:none}
+  .museum-top{padding:22px}
 }
 @media(prefers-reduced-motion:reduce){
-.room.zoom{animation-duration:.01ms}
-.person.walking{animation:none}
+  .visual-frame{animation:none}
+  html{scroll-behavior:auto}
 }
 </style>
 </head>
 <body>
 
-<!-- ホーム画面 -->
+<!-- HOME -->
 <section id="home" class="screen active">
-  <div class="logo">YOUR PERSONAL ART MUSEUM</div>
-  <h1>わたしの美術館</h1>
-  <p class="subtitle">
-    あなたの一枚が、世界にひとつの名画になる。<br>
-    お気に入りの写真を美術館に展示してみよう。
-  </p>
+  <header class="nav">
+    <div class="brand">ATELIER<span style="color:#967f69">.</span></div>
+    <div class="nav-right">
+      <span>AN INTERACTIVE ART EXPERIENCE</span>
+      <button class="nav-link" onclick="scrollToUpload()">CREATE EXHIBITION ↗</button>
+    </div>
+  </header>
 
-  <div class="form">
-    <label class="preview" for="photoInput" id="preview">
-      ＋ 展示したい写真を選ぶ
-    </label>
-    <input type="file" id="photoInput" accept="image/*">
-
-    <input class="field" id="artTitle" maxlength="40"
-      placeholder="作品名（例：ある日の午後）">
-
-    <textarea class="field" id="description" maxlength="150"
-      placeholder="作品の解説（任意）"></textarea>
-
-    <button class="primary" id="startButton">
-      美術館を開館する
-    </button>
-
-    <p class="note">
-      人物・動物・風景・食べ物・イラストなど、どんな写真でもOK。<br>
-      写真はブラウザ内で使用します。<br>
-      来場者数と評価はゲームとしてランダムに決まります。
-    </p>
-  </div>
-</section>
-
-<!-- 美術館 -->
-<section id="museum" class="screen">
-  <div class="gallery">
-    <div class="room" id="room">
-      <div class="wall-line"></div>
-      <div class="floor"></div>
-      <div class="light"></div>
-      <div class="artwork">
-        <div class="frame">
-          <img id="museumPhoto" alt="展示作品">
-        </div>
-        <div class="plaque" id="museumTitle"></div>
+  <main class="hero">
+    <div class="hero-copy">
+      <div class="eyebrow">A PRIVATE GALLERY FOR EVERYONE</div>
+      <h1>Every image<br>deserves<br><em>a gallery.</em></h1>
+      <p class="hero-description">
+        何気ない一枚も、誰かにとっては特別な作品。<br>
+        あなたの写真を、ひとつの美術館へ。<br>
+        ここから、あなただけの展覧会が始まります。
+      </p>
+      <div class="hero-actions">
+        <button class="dark-btn" onclick="scrollToUpload()">作品を展示する &nbsp; ↗</button>
+        <button class="text-link" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">ABOUT THE GALLERY</button>
       </div>
     </div>
-    <div class="visitors" id="visitors"></div>
-    <div class="flash" id="flash"></div>
-    <div class="caption-top">SPECIAL ART EXHIBITION</div>
-    <div class="live" id="liveText">
-      まもなく開館します...
+    <div class="hero-visual">
+      <div class="visual-number">COLLECTION / 001</div>
+      <div class="visual-frame">
+        <div class="visual-inner" id="heroVisual">
+          <div class="visual-placeholder"></div>
+        </div>
+      </div>
+      <div class="visual-floor"></div>
+      <div class="visual-caption">
+        AN IMAGE BECOMES ART<br>
+        WHEN SOMEONE STOPS TO LOOK.
+      </div>
     </div>
+  </main>
+
+  <div class="marquee">
+    <span>YOUR IMAGE.</span>
+    <span>YOUR EXHIBITION.</span>
+    <span>YOUR MOMENT.</span>
+    <span>EST. 2026</span>
   </div>
+
+  <section class="intro" id="about">
+    <div>
+      <div class="small-label">01 / THE CONCEPT</div>
+      <h2>Art begins<br>with <em>your eye.</em></h2>
+    </div>
+    <div>
+      <p>
+        特別なカメラも、難しい技術も必要ありません。<br>
+        大切なのは、あなたがその瞬間を残したいと思ったこと。
+      </p>
+      <p>
+        一枚の写真を展示すると、仮想の美術館に人々が訪れ、
+        作品の前で足を止めます。ときには写真を撮り、
+        ときには誰かが作品と一緒に記念撮影をします。
+      </p>
+      <p>
+        あなたの写真が主役になる、ほんの少し特別な体験です。
+      </p>
+    </div>
+  </section>
+
+  <section class="upload-section" id="upload">
+    <div class="upload-heading">
+      <div class="small-label">02 / CREATE YOUR EXHIBITION</div>
+      <h2>Curate your moment.</h2>
+      <p>あなたの作品を選んで、展覧会を開きましょう。</p>
+    </div>
+    <div class="upload-layout">
+      <label class="upload-preview" for="photoInput">
+        <div class="upload-art">
+          <div class="upload-art-inner" id="uploadVisual">
+            ＋<br>SELECT AN IMAGE<br>写真を選択
+          </div>
+        </div>
+      </label>
+      <div class="upload-fields">
+        <div class="small-label">EXHIBITION DETAILS</div>
+        <h3>Your artwork.</h3>
+        <input type="file" id="photoInput" accept="image/*">
+        <label class="field-label" for="artTitle">01 — TITLE</label>
+        <input class="field" id="artTitle" maxlength="50" placeholder="作品のタイトル">
+        <label class="field-label" for="description">02 — DESCRIPTION</label>
+        <textarea class="field" id="description" maxlength="200" placeholder="作品についての言葉を添える（任意）"></textarea>
+        <button class="dark-btn" id="startButton" style="margin-top:32px">
+          OPEN THE EXHIBITION &nbsp; ↗
+        </button>
+        <p class="upload-note">
+          写真はブラウザ内で使用します。<br>
+          来場者数や評価はエンターテインメント用の架空の結果です。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>ATELIER — YOUR PRIVATE GALLERY</span>
+    <span>AN EXPERIMENT IN ART & IMAGINATION.</span>
+  </footer>
 </section>
 
-<!-- 結果画面 -->
+<!-- 3D MUSEUM -->
+<section id="museum" class="screen">
+  <canvas id="scene"></canvas>
+  <div class="museum-top">
+    <div class="brand">ATELIER.</div>
+    <div class="small-label">PRIVATE EXHIBITION / NOW VIEWING</div>
+  </div>
+  <div class="museum-bottom" id="museumMessage">
+    ENTERING THE GALLERY...
+  </div>
+  <div class="flash" id="flash"></div>
+</section>
+
+<!-- RESULT -->
 <section id="result" class="screen">
-  <div class="result-card">
-    <div class="logo">EXHIBITION REPORT</div>
-    <h2>展示結果発表</h2>
-    <img id="resultPhoto" class="result-photo" alt="展示作品">
-    <h3 id="resultTitle"></h3>
-    <p id="resultDescription"></p>
-
-    <div class="big-number" id="visitorCount">0</div>
-    <div>人があなたの作品を鑑賞しました！</div>
-
-    <div class="stats">
-      <div class="stat">作品評価<strong id="rating"></strong></div>
-      <div class="stat">写真撮影<strong id="photoCount"></strong></div>
-      <div class="stat">記念撮影<strong id="selfieCount"></strong></div>
-      <div class="stat">称号<strong id="award" style="font-size:15px"></strong></div>
+  <header class="nav">
+    <div class="brand">ATELIER.</div>
+    <div class="small-label">EXHIBITION REPORT</div>
+  </header>
+  <div class="result-wrap">
+    <div class="result-header">
+      <span class="small-label">THE PRIVATE COLLECTION</span>
+      <span class="small-label">EXHIBITION NO. 001</span>
     </div>
-
-    <button class="primary" id="shareButton">
-      𝕏 に結果を投稿する
-    </button>
-    <button class="secondary" id="copyButton">
-      投稿文とサイトURLをコピー
-    </button>
-    <button class="secondary" id="retryButton">
-      もう一度展示する
-    </button>
-
-    <p class="note">
-      ※ 来場者数・評価は架空の演出です。<br>
-      ※ 写真はXに自動添付されません。
+    <h1 class="result-title">
+      A moment worth<br><em>remembering.</em>
+    </h1>
+    <div class="result-grid">
+      <div class="result-image-wrap">
+        <img id="resultPhoto" class="result-image" alt="展示作品">
+      </div>
+      <div class="result-info">
+        <div class="small-label">FEATURED ARTWORK</div>
+        <h3 id="resultTitle"></h3>
+        <p id="resultDescription"></p>
+        <div class="result-divider"></div>
+        <div class="small-label">TOTAL VISITORS</div>
+        <div class="visitor-number" id="visitorCount">0</div>
+        <p>VISITORS TO YOUR EXHIBITION</p>
+        <div class="result-divider"></div>
+        <div class="small-label">CURATOR'S NOTE</div>
+        <p id="curatorNote"></p>
+        <div class="result-actions">
+          <button class="dark-btn" id="shareButton">SHARE ON X ↗</button>
+          <button class="outline-btn" id="copyButton">COPY TEXT & LINK</button>
+          <button class="outline-btn" id="retryButton">NEW EXHIBITION</button>
+        </div>
+      </div>
+    </div>
+    <p class="result-footnote">
+      来場者数・展示評価はゲームとして生成した架空の結果です。<br>
+      Xへの投稿には画像が自動添付されません。リンク先はサイトのトップページです。
     </p>
   </div>
 </section>
 
-<script>
+<script type="module">
+import * as THREE from
+"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js";
+
 const $ = id => document.getElementById(id);
 let photoData = "";
-let currentResult = null;
+let exhibition = null;
+let renderer,scene,camera,clock,artTexture;
+let people = [];
+let running = false;
+let frameHandle = null;
 let timers = [];
+let previousTime = 0;
+let showTime = 0;
+let visitCounter = 0;
 
-function wait(callback, ms) {
-  const id = setTimeout(callback, ms);
-  timers.push(id);
-}
+window.scrollToUpload = () =>
+  $("upload").scrollIntoView({behavior:"smooth"});
 
-function showScreen(id) {
-  document.querySelectorAll(".screen").forEach(s => {
-    s.classList.toggle("active", s.id === id);
+function screen(id){
+  document.querySelectorAll(".screen").forEach(s=>{
+    s.classList.toggle("active",s.id===id);
   });
+  window.scrollTo(0,0);
 }
-
-$("photoInput").addEventListener("change", event => {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  if (!file.type.startsWith("image/")) {
-    alert("画像ファイルを選択してください。");
+function delay(fn,ms){
+  timers.push(setTimeout(fn,ms));
+}
+function random(a,b){
+  return Math.floor(Math.random()*(b-a+1))+a;
+}
+function clearTimers(){
+  timers.forEach(clearTimeout);
+  timers=[];
+}
+function makeImage(url){
+  const img=document.createElement("img");
+  img.src=url;
+  img.alt="選択した写真";
+  return img;
+}
+$("photoInput").addEventListener("change",e=>{
+  const file=e.target.files[0];
+  if(!file)return;
+  if(!file.type.startsWith("image/")){
+    alert("画像を選択してください。");
     return;
   }
-
-  const reader = new FileReader();
-  reader.onload = () => {
-    photoData = reader.result;
-    const img = document.createElement("img");
-    img.src = photoData;
-    img.alt = "選択した展示写真";
-    $("preview").replaceChildren(img);
+  if(file.size>20*1024*1024){
+    alert("20MB以下の画像を選んでください。");
+    return;
+  }
+  const reader=new FileReader();
+  reader.onload=()=>{
+    photoData=reader.result;
+    $("uploadVisual").replaceChildren(makeImage(photoData));
+    $("heroVisual").replaceChildren(makeImage(photoData));
   };
   reader.readAsDataURL(file);
 });
-
-function random(min,max) {
-  return Math.floor(Math.random() * (max-min+1)) + min;
+function createExhibition(){
+  const rating=random(65,100);
+  const visitors=random(90,240)+Math.round((rating-65)*13);
+  return{
+    title:$("artTitle").value.trim()||"Untitled",
+    description:$("description").value.trim(),
+    rating,
+    visitors,
+    photoFans:rating>=82,
+    popular:rating>=90
+  };
 }
-
-function createResult() {
-  const score = random(65,100);
-  const visitors = Math.round(
-    60 + (score-65)*11 + random(0,180)
+function material(color,roughness=1){
+  return new THREE.MeshStandardMaterial({color,roughness});
+}
+function mesh(geo,mat,x=0,y=0,z=0,parent=scene){
+  const m=new THREE.Mesh(geo,mat);
+  m.position.set(x,y,z);
+  m.castShadow=true;
+  m.receiveShadow=true;
+  parent.add(m);
+  return m;
+}
+function box(w,h,d,color,x,y,z,parent=scene){
+  return mesh(
+    new THREE.BoxGeometry(w,h,d),
+    material(color),x,y,z,parent
   );
-  const photos = Math.round(visitors * (score/100) * .3);
-  const selfies = score >= 85 ? random(5,35) : random(0,5);
-
-  let award = "注目の新人作品";
-  if (score >= 95) award = "伝説の名画";
-  else if (score >= 85) award = "大人気の名作";
-  else if (score >= 75) award = "心温まる作品";
-
-  return {score,visitors,photos,selfies,award};
 }
+function cylinder(rt,rb,h,color,x,y,z,parent=scene){
+  return mesh(
+    new THREE.CylinderGeometry(rt,rb,h,12),
+    material(color),x,y,z,parent
+  );
+}
+function sphere(r,color,x,y,z,parent=scene){
+  return mesh(
+    new THREE.SphereGeometry(r,16,12),
+    material(color),x,y,z,parent
+  );
+}
+function buildGallery(){
+  scene=new THREE.Scene();
+  scene.background=new THREE.Color("#bbb1a3");
+  scene.fog=new THREE.Fog("#bbb1a3",15,37);
 
-function makePerson(index,takingPhoto) {
-  const person = document.createElement("div");
-  person.className = "person walking";
+  camera=new THREE.PerspectiveCamera(
+    48,innerWidth/innerHeight,.1,100
+  );
+  camera.position.set(0,2.25,17);
+  camera.lookAt(0,2.3,-6.8);
 
-  const colors = [
-    "#25262b","#383431","#343d43","#51443d","#30372f"
-  ];
+  renderer=new THREE.WebGLRenderer({
+    canvas:$("scene"),antialias:true
+  });
+  renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));
+  renderer.setSize(innerWidth,innerHeight);
+  renderer.shadowMap.enabled=true;
+  renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  renderer.outputColorSpace=THREE.SRGBColorSpace;
+  renderer.toneMapping=THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure=1.5;
 
-  person.style.setProperty(
-    "--person-color",colors[index % colors.length]
+  scene.add(new THREE.HemisphereLight("#fff4e4","#65584b",2.0));
+
+  const sun=new THREE.DirectionalLight("#fff1d8",2.3);
+  sun.position.set(-3,8,5);
+  sun.castShadow=true;
+  sun.shadow.mapSize.set(1024,1024);
+  sun.shadow.camera.left=-12;
+  sun.shadow.camera.right=12;
+  sun.shadow.camera.top=12;
+  sun.shadow.camera.bottom=-12;
+  scene.add(sun);
+
+  // Architectural gallery
+  box(17,.3,27,"#b9b0a3",0,-.15,0);
+  box(17,.3,27,"#e1d9cb",0,7.1,0);
+  box(17,7,.3,"#d8d0c3",0,3.5,-11);
+  box(.3,7,27,"#d1c8ba",-8.5,3.5,0);
+  box(.3,7,27,"#d1c8ba",8.5,3.5,0);
+
+  // Decorative wall panels
+  for(let x of [-6.3,-3.8,3.8,6.3]){
+    box(.06,6,.12,"#b9ad9d",x,3.4,-10.8);
+  }
+  box(17,.16,.35,"#9c9183",0,.17,-10.8);
+  box(17,.12,.35,"#e8dfd0",0,6.65,-10.8);
+
+  // Floor tiles
+  for(let x=-7;x<=7;x+=2){
+    for(let z=-10;z<=12;z+=2){
+      box(1.97,.015,1.97,
+        (Math.round((x+z)/2)%2===0)?"#b9afa1":"#b4a99a",
+        x,-.005,z);
+    }
+  }
+
+  // Ceiling tracks
+  for(let x of [-3,3]){
+    box(.08,.08,22,"#544e46",x,6.86,0);
+    for(let z of [-7,-3,1,5]){
+      cylinder(.13,.13,.28,"#393834",x,6.63,z);
+      const light=new THREE.SpotLight("#ffe5b5",25,16,.55,.7);
+      light.position.set(x,6.45,z);
+      light.target.position.set(x*.45,1,-9);
+      scene.add(light,light.target);
+    }
+  }
+
+  // Display wall, frame and photo
+  box(5.2,4.45,.15,"#9b805b",0,3.75,-10.47);
+  box(4.85,4.12,.17,"#d5c2a1",0,3.75,-10.33);
+  box(4.55,3.83,.17,"#6d5136",0,3.75,-10.18);
+  box(4.28,3.55,.18,"#f2ece0",0,3.75,-10.02);
+
+  const tex=new THREE.TextureLoader().load(photoData);
+  tex.colorSpace=THREE.SRGBColorSpace;
+  artTexture=tex;
+  const art=mesh(
+    new THREE.PlaneGeometry(4.02,3.29),
+    new THREE.MeshBasicMaterial({map:tex,side:THREE.DoubleSide}),
+    0,3.75,-9.915
+  );
+  art.castShadow=false;
+
+  // Artwork label
+  box(1.9,.32,.07,"#d4c4a4",0,1.02,-10.32);
+
+  // Sculptural benches
+  box(2.4,.17,.65,"#756452",-5.6,.65,-3);
+  box(.18,.6,.6,"#756452",-6.5,.3,-3);
+  box(.18,.6,.6,"#756452",-4.7,.3,-3);
+
+  people=[];
+  clock=new THREE.Clock();
+}
+function createHuman(i){
+  const root=new THREE.Group();
+  scene.add(root);
+  const colors=["#24272a","#343332","#47413e","#353d42","#554b43"];
+  const c=colors[i%colors.length];
+
+  // Volumetric faceless silhouette
+  sphere(.24,c,0,1.66,0,root);
+  const neck=cylinder(.105,.12,.18,c,0,1.43,0,root);
+  const torso=mesh(
+    new THREE.CapsuleGeometry(.30,.66,5,10),
+    material(c),0,1.06,0,root
+  );
+  torso.scale.set(1.05,1,.65);
+  sphere(.28,c,0,.65,0,root);
+
+  const arms=[],legs=[];
+  for(const side of [-1,1]){
+    const arm=new THREE.Group();
+    arm.position.set(side*.33,1.35,0);
+    root.add(arm);
+    cylinder(.105,.075,.64,c,0,-.31,0,arm);
+    sphere(.095,c,0,-.67,0,arm);
+    arms.push(arm);
+
+    const leg=new THREE.Group();
+    leg.position.set(side*.15,.61,0);
+    root.add(leg);
+    cylinder(.125,.09,.57,c,0,-.28,0,leg);
+    box(.2,.12,.35,c,0,-.61,.08,leg);
+    legs.push(leg);
+  }
+
+  const phone=box(.17,.28,.04,"#151617",0,-.42,.23,arms[1]);
+  phone.visible=false;
+
+  root.scale.setScalar(.85+(i%4)*.045);
+  root.position.set(
+    (i%2===0?-1:1)*(2.0+(i%5)*.58),
+    0,8+i*.55
   );
 
-  const positions = [8,18,28,38,48,58,68,78,88];
-  person.style.left = positions[index % positions.length] + "%";
-
-  const scale = .65 + (index % 4) * .13;
-  person.style.transform = `translateX(-50%) scale(${scale})`;
-  person.style.zIndex = String(Math.round(scale*10));
-
-  person.innerHTML = `
-    <div class="head"></div>
-    <div class="body-shape"></div>
-    <div class="leg left"></div>
-    <div class="leg right"></div>
-    ${takingPhoto ? '<div class="camera"></div>' : ''}
-  `;
-
-  $("visitors").appendChild(person);
-  requestAnimationFrame(() => person.classList.add("visible"));
+  return{
+    root,arms,legs,phone,
+    startX:root.position.x,
+    startZ:root.position.z,
+    targetX:(i%2===0?-1:1)*(1.1+(i%5)*.72),
+    targetZ:-3+(i%4)*1.1,
+    speed:.35+(i%3)*.12,
+    state:"enter",
+    seed:i*1.73,
+    photographer:false,
+    posing:false
+  };
 }
-
-function doFlash() {
-  const flash = $("flash");
-  flash.classList.remove("fire");
-  void flash.offsetWidth;
-  flash.classList.add("fire");
+function addPerson(i){
+  const p=createHuman(i);
+  people.push(p);
 }
+function updatePeople(dt,t){
+  people.forEach((p,i)=>{
+    if(p.state==="enter"){
+      const dx=p.targetX-p.root.position.x;
+      const dz=p.targetZ-p.root.position.z;
+      const dist=Math.hypot(dx,dz);
+      if(dist>.09){
+        const step=Math.min(dist,p.speed*dt);
+        p.root.position.x+=dx/dist*step;
+        p.root.position.z+=dz/dist*step;
+        p.root.rotation.y=Math.atan2(-dx,-dz);
+        p.legs[0].rotation.x=Math.sin(t*7+p.seed)*.35;
+        p.legs[1].rotation.x=-Math.sin(t*7+p.seed)*.35;
+        p.arms[0].rotation.x=-Math.sin(t*7+p.seed)*.17;
+        p.arms[1].rotation.x=Math.sin(t*7+p.seed)*.17;
+      }else{
+        p.state="view";
+      }
+    }else{
+      p.root.rotation.y+=(0-p.root.rotation.y)*Math.min(1,dt*2);
+      p.legs.forEach(l=>l.rotation.x*=.85);
+      p.root.rotation.z=Math.sin(t*.7+p.seed)*.009;
+    }
 
-function startExhibition() {
-  if (!photoData) {
-    alert("まず展示する写真を選んでね！");
+    if(p.photographer){
+      p.arms[0].rotation.x=-1.45;
+      p.arms[1].rotation.x=-1.45;
+      p.phone.visible=true;
+    }
+    if(p.posing){
+      p.arms[1].rotation.z=-.4;
+    }
+  });
+}
+function flash(){
+  $("flash").classList.remove("fire");
+  void $("flash").offsetWidth;
+  $("flash").classList.add("fire");
+}
+function animate(){
+  if(!running)return;
+  frameHandle=requestAnimationFrame(animate);
+  const dt=Math.min(clock.getDelta(),.05);
+  showTime+=dt;
+  const t=showTime;
+
+  // Camera dolly, then settle
+  const u=Math.min(1,t/7);
+  const eased=u*u*(3-2*u);
+  camera.position.z=17-11.7*eased;
+  camera.position.y=2.3+.15*eased;
+  camera.position.x=Math.sin(t*.23)*.06;
+  camera.lookAt(0,3.3,-10);
+
+  updatePeople(dt,t);
+  renderer.render(scene,camera);
+}
+function resize(){
+  if(!renderer||!camera)return;
+  camera.aspect=innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight);
+}
+window.addEventListener("resize",resize);
+
+function endScene(){
+  running=false;
+  if(frameHandle)cancelAnimationFrame(frameHandle);
+  clearTimers();
+  if(scene){
+    scene.traverse(o=>{
+      if(o.geometry)o.geometry.dispose();
+      if(o.material){
+        const mats=Array.isArray(o.material)?o.material:[o.material];
+        mats.forEach(m=>m.dispose());
+      }
+    });
+  }
+  if(artTexture)artTexture.dispose();
+  if(renderer){
+    renderer.dispose();
+    renderer.forceContextLoss();
+    renderer=null;
+  }
+  scene=null;
+  camera=null;
+  people=[];
+}
+function start(){
+  if(!photoData){
+    alert("まず展示する写真を選んでください。");
+    return;
+  }
+  endScene();
+  exhibition=createExhibition();
+  screen("museum");
+  $("museumMessage").textContent="ENTERING THE GALLERY...";
+
+  try{
+    buildGallery();
+  }catch(err){
+    console.error(err);
+    alert("3Dの表示に失敗しました。ChromeなどWebGL対応ブラウザでお試しください。");
+    screen("home");
     return;
   }
 
-  timers.forEach(clearTimeout);
-  timers = [];
-  currentResult = createResult();
+  running=true;
+  showTime=0;
+  animate();
 
-  const title = $("artTitle").value.trim() || "名もなき名画";
+  delay(()=>{
+    $("museumMessage").textContent="THE EXHIBITION IS NOW OPEN";
+  },6500);
 
-  $("museumPhoto").src = photoData;
-  $("museumTitle").textContent = title;
-  $("resultPhoto").src = photoData;
-  $("resultTitle").textContent = title;
-  $("resultDescription").textContent =
-    $("description").value.trim();
-
-  $("visitors").replaceChildren();
-  $("room").classList.remove("zoom");
-  void $("room").offsetWidth;
-
-  showScreen("museum");
-  $("room").classList.add("zoom");
-
-  $("liveText").textContent =
-    "美術館に近づいています...";
-
-  wait(() => {
-    $("liveText").textContent =
-      "本日の展示が始まりました";
-  },4200);
-
-  const visiblePeople = Math.min(
-    20,Math.max(3,Math.ceil(currentResult.visitors/40))
-  );
-
-  for (let i=0;i<visiblePeople;i++) {
-    wait(() => {
-      const photographer =
-        currentResult.score >= 85 && i % 4 === 0;
-
-      makePerson(i,photographer);
-
-      $("liveText").textContent =
-        `${Math.round(currentResult.visitors*(i+1)/visiblePeople)} 人が来場中...`;
-
-      if (photographer) doFlash();
-    },5400+i*430);
+  const number=Math.min(17,Math.max(4,Math.round(exhibition.visitors/38)));
+  for(let i=0;i<number;i++){
+    delay(()=>{
+      if(!running)return;
+      addPerson(i);
+      $("museumMessage").textContent="VISITORS ARE ARRIVING...";
+    },7300+i*650);
   }
 
-  if (currentResult.score >= 90) {
-    wait(() => {
-      $("liveText").textContent =
-        "大人気！作品の前で記念撮影が始まりました 📸";
-      doFlash();
-    },6200+visiblePeople*430);
+  const finalArrival=7300+number*650;
+
+  if(exhibition.photoFans){
+    delay(()=>{
+      if(!running)return;
+      $("museumMessage").textContent="A VISITOR IS PHOTOGRAPHING THE ARTWORK";
+      const p=people[0];
+      if(p){
+        p.photographer=true;
+        p.state="view";
+      }
+      flash();
+    },finalArrival+1100);
   }
 
-  wait(showResult,8500+visiblePeople*430);
+  if(exhibition.popular){
+    delay(()=>{
+      if(!running)return;
+      $("museumMessage").textContent="A COMMEMORATIVE PHOTO IS BEING TAKEN";
+      if(people[1]){
+        people[1].posing=true;
+        people[1].state="view";
+        people[1].root.position.set(.7,0,-5.1);
+      }
+      if(people[2]){
+        people[2].photographer=true;
+        people[2].state="view";
+        people[2].root.position.set(1.4,0,-1.9);
+      }
+      flash();
+    },finalArrival+3000);
+  }
+
+  delay(showResult,finalArrival+(exhibition.popular?6500:4300));
 }
-
-function showResult() {
-  $("visitorCount").textContent =
-    currentResult.visitors.toLocaleString("ja-JP");
-  $("rating").textContent = currentResult.score+" 点";
-  $("photoCount").textContent = currentResult.photos+" 枚";
-  $("selfieCount").textContent = currentResult.selfies+" 組";
-  $("award").textContent = currentResult.award;
-  showScreen("result");
+function showResult(){
+  if(!exhibition)return;
+  endScene();
+  $("resultPhoto").src=photoData;
+  $("resultTitle").textContent=exhibition.title;
+  $("resultDescription").textContent=exhibition.description;
+  $("visitorCount").textContent=exhibition.visitors.toLocaleString("ja-JP");
+  let note="訪れた人々は静かに作品を眺め、それぞれの時間を過ごしました。";
+  if(exhibition.rating>=82)
+    note="多くの人が作品の前で足を止め、その美しさを写真に収めていました。";
+  if(exhibition.popular)
+    note="作品の前には人々が集まり、記念写真を撮る姿も見られました。忘れられない展覧会となりました。";
+  $("curatorNote").textContent=note;
+  screen("result");
 }
-
-function shareText() {
-  const title = $("artTitle").value.trim() || "名もなき名画";
-
-  return `🖼️ わたしの美術館に「${title}」を展示しました！\n\n` +
-    `👥 来場者：${currentResult.visitors}人\n` +
-    `⭐ 評価：${currentResult.score}点\n` +
-    `📸 撮影：${currentResult.photos}枚\n` +
-    `🏆 ${currentResult.award}\n\n` +
-    `#わたしの美術館 #写真好きな人と繋がりたい`;
+function shareText(){
+  return `ATELIER — 私の写真展\n`+
+    `作品「${exhibition.title}」を展示しました。\n`+
+    `来場者：${exhibition.visitors}人\n\n`+
+    `#ATELIER美術館 #写真展 #私の美術館`;
 }
-
-$("startButton").addEventListener("click",startExhibition);
-
-$("shareButton").addEventListener("click",() => {
-  if (!currentResult) return;
-
-  const text = shareText();
-  const url = location.href.split("#")[0];
-
-  const shareUrl =
-    "https://twitter.com/intent/tweet?text=" +
-    encodeURIComponent(text) +
-    "&url=" + encodeURIComponent(url);
-
-  window.open(shareUrl,"_blank","noopener,noreferrer");
+$("startButton").addEventListener("click",start);
+$("retryButton").addEventListener("click",()=>{
+  endScene();
+  screen("home");
 });
-
-$("copyButton").addEventListener("click",async () => {
-  if (!currentResult) return;
-
-  const text =
-    shareText()+"\n"+location.href.split("#")[0];
-
-  try {
+$("shareButton").addEventListener("click",()=>{
+  if(!exhibition)return;
+  const url="https://twitter.com/intent/tweet?text="+
+    encodeURIComponent(shareText())+
+    "&url="+encodeURIComponent(location.href.split("#")[0]);
+  window.open(url,"_blank","noopener,noreferrer");
+});
+$("copyButton").addEventListener("click",async()=>{
+  if(!exhibition)return;
+  const text=shareText()+"\n"+location.href.split("#")[0];
+  try{
     await navigator.clipboard.writeText(text);
-    alert("投稿文とURLをコピーしたよ！");
-  } catch(e) {
-    const area = document.createElement("textarea");
-    area.value = text;
+    alert("投稿文とURLをコピーしました。");
+  }catch(err){
+    const area=document.createElement("textarea");
+    area.value=text;
     document.body.appendChild(area);
     area.select();
-
-    const copied = document.execCommand("copy");
+    const ok=document.execCommand("copy");
     area.remove();
-
-    alert(copied ? "コピーしたよ！" : "コピーできませんでした。");
+    alert(ok?"コピーしました。":"コピーできませんでした。");
   }
-});
-
-$("retryButton").addEventListener("click",() => {
-  timers.forEach(clearTimeout);
-  timers = [];
-  showScreen("home");
 });
 </script>
 </body>
