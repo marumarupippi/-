@@ -1,1156 +1,1846 @@
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ATELIER — Your Private Gallery</title>
-<meta name="theme-color" content="#eae7e0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#efede8">
+<meta name="description" content="何気ない一枚を美術館へ。写真を展示して、来場者の反応を楽しむ小さな3D美術館。">
+<title>余白の美術館 | あなたの一枚を、展示する。</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&family=Noto+Serif+JP:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap');
-
 :root{
-  --paper:#eae7e0;
-  --ink:#242522;
-  --muted:#77756e;
-  --line:#cbc7bf;
-  --accent:#7e6651;
+  --paper:#efede8;
+  --ink:#222521;
+  --sub:#77766f;
+  --line:#d2cfc7;
+  --olive:#717763;
+  --white:#fbfaf6;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
   margin:0;
-  background:var(--paper);
   color:var(--ink);
-  font-family:"DM Sans","Hiragino Kaku Gothic ProN",sans-serif;
+  background:var(--paper);
+  font-family:'DM Sans','Noto Sans JP',sans-serif;
+  -webkit-font-smoothing:antialiased;
 }
 button,input,textarea{font:inherit}
 button{cursor:pointer}
 button:focus-visible,input:focus-visible,textarea:focus-visible{
-  outline:2px solid #9b7957;
+  outline:2px solid var(--olive);
   outline-offset:4px;
 }
-button:disabled{opacity:.5;cursor:not-allowed}
-.screen{display:none;min-height:100vh}
+[hidden]{display:none!important}
+.screen{display:none}
 .screen.active{display:block}
-.serif{font-family:"Playfair Display",Georgia,serif}
-.small-label{
+.serif{font-family:'Noto Serif JP',serif}
+.shell{width:min(1380px,88vw);margin:auto}
+.eyebrow{
   font-size:10px;
-  font-weight:600;
-  letter-spacing:2.5px;
-  text-transform:uppercase;
+  letter-spacing:.22em;
+  font-weight:700;
+  color:var(--olive);
 }
-.nav{
+.sitehead{
   height:86px;
-  padding:0 6%;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
   border-bottom:1px solid var(--line);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
 }
 .brand{
-  font-family:"Playfair Display",Georgia,serif;
-  font-size:26px;
-  letter-spacing:-1px;
+  font-family:'Noto Serif JP',serif;
+  font-size:20px;
+  letter-spacing:.13em;
+  white-space:nowrap;
 }
-.nav-right{
+.headright{
   display:flex;
-  gap:35px;
   align-items:center;
-}
-.nav-right span{font-size:11px;letter-spacing:1.4px}
-.nav-link{
-  border:0;
-  background:none;
+  gap:32px;
   font-size:11px;
-  letter-spacing:1.2px;
-  text-decoration:underline;
-  text-underline-offset:6px;
-  color:var(--ink);
+  letter-spacing:.09em;
+}
+.headright a{
+  color:inherit;
+  text-decoration:none;
+  border-bottom:1px solid currentColor;
+  padding-bottom:5px;
 }
 .hero{
-  min-height:calc(100vh - 86px);
+  min-height:min(820px,calc(100svh - 86px));
   display:grid;
-  grid-template-columns:1.06fr .94fr;
+  grid-template-columns:1.05fr .95fr;
+  align-items:stretch;
 }
-.hero-copy{
-  padding:clamp(50px,8vw,120px) 6% 65px 11.3%;
+.herotext{
+  padding:clamp(80px,11vh,120px) 8% 90px 0;
   display:flex;
   flex-direction:column;
   justify-content:center;
-}
-.eyebrow{
-  display:flex;
-  align-items:center;
-  gap:13px;
-  font-size:11px;
-  letter-spacing:2px;
-  color:var(--accent);
-}
-.eyebrow:before{
-  content:"";
-  width:30px;
-  height:1px;
-  background:var(--accent);
+  align-items:flex-start;
 }
 .hero h1{
-  font-family:"Playfair Display",Georgia,serif;
-  font-weight:400;
-  font-size:clamp(55px,7.5vw,126px);
-  letter-spacing:-5px;
-  line-height:.99;
-  margin:42px 0 32px;
+  font-family:'Noto Serif JP',serif;
+  font-weight:500;
+  font-size:clamp(44px,5.1vw,82px);
+  letter-spacing:-.075em;
+  line-height:1.6;
+  margin:29px 0 25px;
 }
-.hero h1 em{
-  font-weight:400;
-  color:var(--accent);
-}
-.hero-description{
-  color:#69665f;
-  font-size:13px;
+.hero h1 span{display:block}
+.hero h1 em{font-style:normal;color:#808473}
+.lead{
+  font-size:14px;
   line-height:2.4;
-  max-width:390px;
-}
-.hero-actions{
-  display:flex;
-  align-items:center;
-  gap:25px;
-  margin-top:35px;
-}
-.dark-btn{
-  background:var(--ink);
-  border:1px solid var(--ink);
-  color:#fff;
-  padding:18px 27px;
-  font-size:11px;
-  letter-spacing:1.5px;
-  transition:.3s;
-}
-.dark-btn:hover{background:#65513e;border-color:#65513e}
-.text-link{
-  border:0;
-  background:none;
-  border-bottom:1px solid var(--ink);
-  padding:10px 0;
-  font-size:11px;
-  letter-spacing:1px;
-}
-.hero-visual{
-  position:relative;
-  min-height:640px;
-  overflow:hidden;
-  background:
-    linear-gradient(110deg,#d1c9bb,#b3aa9b 55%,#d0c5b5);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-.hero-visual:before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:radial-gradient(ellipse at 53% 22%,#fff8e57a,transparent 60%);
-}
-.visual-floor{
-  position:absolute;
-  bottom:0;
-  width:100%;
-  height:18%;
-  background:linear-gradient(#a69b8d,#c2b5a4);
-  border-top:2px solid #a89c8b;
-}
-.visual-frame{
-  position:relative;
-  width:min(54%,340px);
-  aspect-ratio:3/4;
-  padding:13px;
-  background:linear-gradient(125deg,#7b6245,#c2a783 30%,#72573a 60%,#b99b70);
-  box-shadow:18px 25px 50px #342c2755,0 0 0 2px #5e4c37;
-  transform:translateY(-10%);
-  z-index:2;
-  animation:frameFloat 8s ease-in-out infinite;
-}
-.visual-inner{
-  width:100%;
-  height:100%;
-  border:13px solid #e9e1d3;
-  background:#b6a18a;
-  overflow:hidden;
-}
-.visual-inner img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-}
-.visual-placeholder{
-  width:100%;
-  height:100%;
-  background:
-    radial-gradient(ellipse at 45% 35%,#c6b3a1,transparent 55%),
-    linear-gradient(145deg,#777a70,#a6a093 50%,#514f48);
-}
-.visual-caption{
-  position:absolute;
-  left:8%;
-  bottom:8%;
-  z-index:3;
-  color:#f8f3e9;
-  font-size:10px;
-  letter-spacing:2px;
-  line-height:2;
-}
-.visual-number{
-  position:absolute;
-  right:8%;
-  top:8%;
-  color:#f8f3e9;
-  font-family:Georgia,serif;
-  font-size:13px;
-}
-@keyframes frameFloat{
-  0%,100%{transform:translateY(-10%) rotate(-1deg)}
-  50%{transform:translateY(-12%) rotate(.5deg)}
-}
-.marquee{
-  padding:19px 6%;
-  border-top:1px solid var(--line);
-  border-bottom:1px solid var(--line);
-  display:flex;
-  justify-content:space-between;
-  gap:20px;
-  color:#79746c;
-  font-size:10px;
-  letter-spacing:2px;
-}
-.intro{
-  padding:115px 9%;
-  display:grid;
-  grid-template-columns:1fr 1.2fr;
-  gap:12%;
-  align-items:start;
-}
-.intro h2{
-  font-family:"Playfair Display",Georgia,serif;
-  font-weight:400;
-  font-size:clamp(38px,5vw,75px);
-  line-height:1.2;
-  letter-spacing:-2px;
+  color:#666760;
   margin:0;
 }
-.intro p{
-  color:#77736c;
-  font-size:13px;
-  line-height:2.5;
-  max-width:470px;
-  margin-top:15px;
+.cta{
+  border:1px solid var(--ink);
+  background:var(--ink);
+  color:#fff;
+  min-height:57px;
+  padding:0 25px;
+  display:inline-flex;
+  gap:36px;
+  justify-content:space-between;
+  align-items:center;
+  letter-spacing:.06em;
+  font-size:12px;
+  transition:background .2s,transform .2s;
 }
-.intro .small-label{color:var(--accent);margin-bottom:24px}
-.upload-section{
-  padding:95px 6% 125px;
-  background:#dcd7ce;
+.cta:hover{
+  background:#495044;
+  transform:translateY(-2px);
 }
-.upload-heading{text-align:center;margin-bottom:50px}
-.upload-heading h2{
-  font-family:"Playfair Display",Georgia,serif;
-  font-size:clamp(40px,6vw,75px);
-  font-weight:400;
-  margin:20px 0;
+.cta.secondary{
+  background:transparent;
+  color:var(--ink);
+  border-color:#a6a69b;
 }
-.upload-heading p{
-  color:#77736c;
-  font-size:13px;
-  line-height:2;
+.cta.secondary:hover{background:#deddd4}
+.herotext .cta{margin-top:46px}
+.herofoot{
+  color:#999991;
+  font-size:10px;
+  letter-spacing:.15em;
+  margin-top:66px;
 }
-.upload-layout{
-  max-width:1060px;
-  margin:auto;
+.heroart{
+  position:relative;
+  min-height:600px;
+  overflow:hidden;
+  background:linear-gradient(124deg,#d4d0c6,#b8b4aa 54%,#aaa698);
+}
+.heroart:before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(90deg,#0001,transparent 17%,#fff5 50%,transparent 85%),
+    radial-gradient(ellipse at 50% 9%,#fff9e8aa,transparent 68%);
+}
+.heroart:after{
+  content:'';
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:18%;
+  height:1px;
+  background:#8e887d;
+}
+.hero-floor{
+  position:absolute;
+  inset:82% 0 0;
+  background:linear-gradient(#9c978e,#b9b3a8);
+}
+.hero-frame{
+  width:min(53%,315px);
+  aspect-ratio:4/5;
+  position:absolute;
+  left:50%;
+  top:45%;
+  transform:translate(-50%,-50%);
+  padding:11px;
+  background:linear-gradient(
+    135deg,#554d42,#aa9d86 22%,#73624a 51%,
+    #c7b496 74%,#4c453c
+  );
+  box-shadow:0 32px 48px #2a272355,0 0 0 1px #4d4336;
+}
+.hero-frame-inner{
+  width:100%;
+  height:100%;
+  background:#ddd8cb;
+  border:15px solid #e4e0d6;
   display:grid;
-  grid-template-columns:1fr 1fr;
-  background:#f1eee8;
-  box-shadow:0 22px 65px #51473818;
+  place-items:center;
+  overflow:hidden;
 }
-.upload-preview{
-  min-height:480px;
-  padding:35px;
+.hero-frame-inner img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  background:#cec8bb;
+}
+.sample-art{
+  height:100%;
+  width:100%;
   display:flex;
+  flex-direction:column;
   align-items:center;
   justify-content:center;
-  background:#c8c0b4;
+  background:linear-gradient(160deg,#666a60,#969587 52%,#625f52);
+  color:#eae9de;
+  font-family:'Noto Serif JP',serif;
+  font-size:clamp(16px,2vw,30px);
+  letter-spacing:.2em;
+  line-height:1.9;
+  text-align:center;
+}
+.arttag{
+  position:absolute;
+  left:7%;
+  bottom:6%;
+  color:#fffdf6;
+  line-height:1.7;
+  font-size:10px;
+  letter-spacing:.2em;
+}
+.artnum{
+  position:absolute;
+  top:6%;
+  right:7%;
+  color:#f4f0e8;
+  font-size:11px;
+  letter-spacing:.1em;
+}
+.strip{
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  padding:18px 0;
+  display:flex;
+  justify-content:space-between;
+  color:#797b73;
+  font-size:10px;
+  letter-spacing:.18em;
+}
+.intro{
+  padding:125px 0 110px;
+  display:grid;
+  grid-template-columns:.8fr 1fr;
+  gap:14%;
+}
+.intro h2{
+  font:500 clamp(27px,3vw,45px)/1.8 'Noto Serif JP',serif;
+  letter-spacing:-.07em;
+  margin:22px 0;
+}
+.intro p{
+  font-size:13px;
+  line-height:2.5;
+  color:#6d6d66;
+  margin:20px 0;
+}
+.upload{
+  padding:110px 0 135px;
+  background:#deddd6;
+}
+.uploadheader{text-align:center}
+.uploadheader h2{
+  font:500 clamp(34px,4.2vw,58px)/1.4 'Noto Serif JP',serif;
+  letter-spacing:-.07em;
+  margin:21px 0 14px;
+}
+.uploadheader p{
+  color:#77776e;
+  font-size:13px;
+}
+.uploadgrid{
+  margin:55px auto 0;
+  max-width:1120px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  background:#f7f5ef;
+  box-shadow:0 20px 50px #49453b15;
+}
+.previewbox{
+  display:grid;
+  place-items:center;
+  min-height:500px;
+  padding:38px;
+  background:radial-gradient(
+    ellipse at 50% 16%,#eee9dc,#beb9ad 75%
+  );
   cursor:pointer;
   position:relative;
 }
-.upload-preview:before{
-  content:"";
+.previewbox:before{
+  content:'';
   position:absolute;
-  inset:0;
-  background:radial-gradient(ellipse at 50% 20%,#fff6e566,transparent 75%);
+  bottom:0;
+  height:13%;
+  left:0;
+  right:0;
+  background:linear-gradient(#a9a295,#c3bbb0);
+  border-top:1px solid #988f81;
 }
-.upload-art{
+.previewframe{
   position:relative;
-  width:min(75%,290px);
+  z-index:1;
+  width:min(76%,310px);
   aspect-ratio:4/5;
   padding:10px;
-  background:linear-gradient(135deg,#5f4c37,#b99b72,#5d4934);
-  box-shadow:12px 20px 35px #3a302c55;
+  background:linear-gradient(135deg,#524537,#ac9b7f,#675844);
+  box-shadow:14px 22px 35px #2f282352;
 }
-.upload-art-inner{
+.previewinside{
   width:100%;
   height:100%;
-  background:#e6dfd3;
-  border:12px solid #e6dfd3;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  border:13px solid #ded9cc;
+  display:grid;
+  place-items:center;
+  background:#f0ede5;
+  color:#77776f;
   text-align:center;
-  overflow:hidden;
-  color:#93897d;
   font-size:12px;
-  line-height:2;
+  line-height:2.4;
+  overflow:hidden;
 }
-.upload-art-inner img{
+.previewinside img{
   width:100%;
   height:100%;
   object-fit:contain;
 }
-.upload-fields{
-  padding:clamp(30px,5vw,65px);
+.inputpane{
+  padding:clamp(30px,5vw,68px);
   display:flex;
   flex-direction:column;
   justify-content:center;
 }
-.upload-fields h3{
-  font-family:"Playfair Display",Georgia,serif;
-  font-size:34px;
-  font-weight:400;
-  margin:15px 0 30px;
+.inputpane h3{
+  font:500 31px 'Noto Serif JP',serif;
+  margin:17px 0 30px;
 }
-.field-label{
+.fieldname{
   font-size:10px;
-  letter-spacing:1.5px;
-  margin:18px 0 8px;
+  font-weight:700;
+  letter-spacing:.17em;
+  margin-top:23px;
+  color:#62655c;
 }
 .field{
-  width:100%;
-  padding:14px 0;
   border:0;
-  border-bottom:1px solid #bbb3a7;
-  outline:0;
   background:transparent;
-  color:var(--ink);
-  font-size:13px;
+  border-bottom:1px solid #b9b6ad;
+  width:100%;
+  padding:14px 0 13px;
+  border-radius:0;
+  font-size:14px;
+  color:#222;
 }
-textarea.field{resize:vertical;min-height:70px}
-#photoInput{display:none}
-.upload-note{
+.field:focus{
+  outline:0;
+  border-bottom-color:#575d4e;
+}
+textarea.field{
+  resize:vertical;
+  min-height:76px;
+}
+.inputpane .cta{margin-top:34px}
+.notice{
   font-size:11px;
-  color:#888177;
+  color:#84847c;
   line-height:2;
-  margin-top:22px;
+  margin-top:23px;
 }
-footer{
-  padding:32px 6%;
+.sitefoot{
+  padding:28px 0;
   display:flex;
   justify-content:space-between;
-  gap:15px;
   font-size:10px;
-  letter-spacing:1px;
-  color:#77736c;
+  color:#8b8b82;
+  letter-spacing:.1em;
 }
 
-/* 3D 展示室 */
-#museum{
-  position:relative;
+/* 3D美術館 */
+#gallery{
   height:100vh;
   height:100dvh;
-  background:#141310;
+  position:relative;
+  background:#20231f;
   overflow:hidden;
+  color:#f6f4ed;
 }
 #scene{
   display:block;
   width:100%;
   height:100%;
 }
-.museum-top{
+.scene-ui{
   position:absolute;
-  z-index:5;
-  top:0;
-  left:0;
-  right:0;
-  padding:30px 5%;
+  pointer-events:none;
+  z-index:3;
+}
+.scene-top{
+  left:4%;
+  right:4%;
+  top:30px;
   display:flex;
   justify-content:space-between;
-  color:#f4eee3;
+  gap:20px;
+  align-items:flex-start;
+  text-shadow:0 2px 12px #0008;
+}
+.scene-top .brand{font-size:17px}
+.scene-sub{
+  font-size:10px;
+  letter-spacing:.16em;
+  color:#e3e0d5;
+}
+.scene-side{
+  right:4%;
+  top:50%;
+  transform:translateY(-50%);
+  text-align:right;
+}
+.scene-side strong{
+  font:500 clamp(32px,4.3vw,58px) 'Noto Serif JP',serif;
+  display:block;
+}
+.scene-side small{
+  font-size:10px;
+  letter-spacing:.2em;
+}
+.scene-bottom{
+  left:50%;
+  bottom:27px;
+  transform:translateX(-50%);
+  background:#181b18bb;
+  border:1px solid #e7e5dc44;
+  padding:14px 23px;
+  font-size:12px;
+  letter-spacing:.12em;
+  text-align:center;
+  width:max-content;
+  max-width:88vw;
+  backdrop-filter:blur(8px);
+}
+.skip{
+  position:absolute;
+  top:78px;
+  right:4%;
+  z-index:6;
+  pointer-events:auto;
+  border:1px solid #fff7;
+  background:#171a16a0;
+  color:white;
+  padding:10px 14px;
+  font-size:11px;
+  letter-spacing:.08em;
+}
+.reaction{
+  position:absolute;
+  top:20%;
+  left:50%;
+  transform:translateX(-50%) translateY(15px);
+  opacity:0;
+  z-index:5;
+  background:#f4f1e8e8;
+  color:#333a30;
+  padding:12px 19px;
+  font:500 13px 'Noto Serif JP',serif;
+  border-radius:3px;
+  white-space:nowrap;
+  transition:opacity .3s,transform .3s;
   pointer-events:none;
 }
-.museum-top .brand{font-size:24px}
-.museum-top .small-label{align-self:center}
-.museum-bottom{
-  position:absolute;
-  bottom:40px;
-  left:50%;
-  transform:translateX(-50%);
-  color:#f8f4e9;
-  font-size:11px;
-  letter-spacing:2px;
-  background:#18161299;
-  padding:15px 24px;
-  white-space:nowrap;
-  z-index:5;
-  max-width:95%;
-  overflow:hidden;
-  text-overflow:ellipsis;
+.reaction.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
 }
 .flash{
   position:absolute;
   inset:0;
-  background:#fff;
+  background:white;
   opacity:0;
+  z-index:4;
   pointer-events:none;
-  z-index:6;
 }
-.flash.fire{animation:flash .5s}
+.flash.on{animation:flash .4s}
 @keyframes flash{
   0%,100%{opacity:0}
-  18%{opacity:.8}
+  12%{opacity:.68}
 }
 
-/* 展示レポート */
-#result{
-  background:#eae7e0;
-  min-height:100vh;
+/* 展示室内の結果パネル */
+.report{
+  position:absolute;
+  z-index:8;
+  right:clamp(14px,4%,70px);
+  bottom:clamp(75px,9%,120px);
+  width:min(365px,calc(100% - 28px));
+  padding:27px;
+  background:#f1efe9ed;
+  color:#242922;
+  box-shadow:0 14px 50px #0004;
+  backdrop-filter:blur(15px);
+  border:1px solid #ffffff91;
+  animation:report-in .5s ease both;
 }
-.result-wrap{
-  max-width:1100px;
-  margin:auto;
-  padding:85px 5% 100px;
+@keyframes report-in{
+  from{opacity:0;transform:translateY(25px)}
+  to{opacity:1;transform:translateY(0)}
 }
-.result-header{
-  display:flex;
-  justify-content:space-between;
-  border-bottom:1px solid var(--line);
-  padding-bottom:24px;
-  gap:15px;
+.report h2{
+  font:500 25px/1.7 'Noto Serif JP',serif;
+  margin:12px 0;
 }
-.result-title{
-  font-family:"Playfair Display",Georgia,serif;
-  font-size:clamp(45px,7vw,95px);
-  font-weight:400;
-  letter-spacing:-3px;
-  line-height:1.1;
-  margin:60px 0;
+.report .big{
+  font:500 57px 'Noto Serif JP',serif;
+  line-height:1.2;
+  margin:12px 0;
 }
-.result-grid{
+.report p{
+  font-size:12px;
+  line-height:2;
+  color:#686e64;
+  margin:8px 0 16px;
+}
+.report-rule{
+  height:1px;
+  background:#c5c7bc;
+  margin:16px 0;
+}
+.report-buttons{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:8%;
-  align-items:center;
+  gap:8px;
 }
-.result-image-wrap{
-  background:#c5bbad;
-  padding:12%;
-  box-shadow:0 15px 35px #3b312219;
-}
-.result-image{
-  display:block;
-  width:100%;
-  max-height:480px;
-  object-fit:contain;
-  padding:12px;
-  background:#e6ded0;
-  border:13px ridge #9c7c53;
-}
-.result-info h3{
-  font-family:"Playfair Display",Georgia,serif;
-  font-size:35px;
-  font-weight:400;
-  margin:15px 0;
-  overflow-wrap:anywhere;
-}
-.result-info p{
-  color:#78736a;
-  font-size:13px;
-  line-height:2.2;
-}
-.visitor-number{
-  font-family:"Playfair Display",Georgia,serif;
-  font-size:clamp(75px,10vw,130px);
-  line-height:1.1;
-  margin-top:35px;
-}
-.result-divider{
-  border-top:1px solid var(--line);
-  margin:30px 0;
-}
-.result-actions{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-  margin-top:35px;
-}
-.outline-btn{
-  padding:17px 25px;
-  background:none;
-  border:1px solid #a9a197;
-  color:var(--ink);
+.report-buttons button{
+  padding:13px 5px;
   font-size:11px;
-  letter-spacing:1px;
+  letter-spacing:.03em;
+  border:1px solid #43483f;
+  background:#2d362e;
+  color:white;
 }
-.result-footnote{
-  margin-top:40px;
-  color:#898177;
-  font-size:11px;
-  line-height:2;
+.report-buttons button.light{
+  background:transparent;
+  color:#30372e;
 }
-@media(max-width:800px){
-  .nav{height:70px}
-  .nav-right span{display:none}
+.report .micro{
+  font-size:10px;
+  color:#777a70;
+  margin-top:12px;
+}
+
+/* スマホ対応 */
+@media(max-width:820px){
+  .shell{width:min(100% - 40px,640px)}
+  .sitehead{height:68px}
+  .headright .pc{display:none}
   .hero{grid-template-columns:1fr}
-  .hero-copy{padding:80px 8%}
-  .hero h1{letter-spacing:-3px}
-  .hero-visual{min-height:490px}
-  .intro{grid-template-columns:1fr;padding:80px 8%;gap:20px}
-  .upload-layout{grid-template-columns:1fr}
-  .upload-preview{min-height:380px}
-  .result-grid{grid-template-columns:1fr;gap:40px}
-  .result-wrap{padding-top:50px}
-  .marquee span:last-child{display:none}
-  .museum-top{padding:22px}
+  .herotext{padding:65px 0 70px}
+  .hero h1{
+    font-size:clamp(39px,9vw,61px);
+    line-height:1.7;
+    letter-spacing:-.085em;
+  }
+  .herofoot{margin-top:42px}
+  .heroart{min-height:460px}
+  .strip span:nth-child(3){display:none}
+  .intro{
+    padding:75px 0;
+    grid-template-columns:1fr;
+    gap:5px;
+  }
+  .upload{padding:77px 0 85px}
+  .uploadgrid{grid-template-columns:1fr}
+  .previewbox{min-height:340px}
+  .previewframe{width:min(62%,260px)}
+  .inputpane{padding:35px 27px}
+  .sitefoot span:last-child{display:none}
+  .scene-side{
+    top:112px;
+    right:5%;
+    transform:none;
+  }
+  .scene-side strong{font-size:28px}
+  .scene-bottom{font-size:11px}
+  .scene-top .scene-sub{display:none}
+  .report{
+    right:14px;
+    bottom:74px;
+    padding:18px;
+    width:min(315px,calc(100% - 28px));
+  }
+  .report h2{font-size:20px}
+  .report .big{font-size:41px}
+  .reaction{
+    top:17%;
+    font-size:11px;
+    max-width:90%;
+    white-space:normal;
+    text-align:center;
+  }
+  .skip{top:70px}
 }
 @media(prefers-reduced-motion:reduce){
-  .visual-frame{animation:none}
   html{scroll-behavior:auto}
+  *,*:before,*:after{
+    animation-duration:.01ms!important;
+    transition-duration:.01ms!important;
+  }
 }
 </style>
 </head>
 <body>
 
-<!-- HOME -->
-<section id="home" class="screen active">
-  <header class="nav">
-    <div class="brand">ATELIER<span style="color:#967f69">.</span></div>
-    <div class="nav-right">
-      <span>AN INTERACTIVE ART EXPERIENCE</span>
-      <button class="nav-link" onclick="scrollToUpload()">CREATE EXHIBITION ↗</button>
+<!-- ホーム画面 -->
+<div id="home" class="screen active">
+  <header class="shell sitehead">
+    <div class="brand">
+      余白の美術館 <span style="color:#8d927e">.</span>
+    </div>
+    <div class="headright">
+      <span class="pc">あなただけの、小さな展覧会。</span>
+      <a href="#upload">作品を展示する ↗</a>
     </div>
   </header>
 
-  <main class="hero">
-    <div class="hero-copy">
-      <div class="eyebrow">A PRIVATE GALLERY FOR EVERYONE</div>
-      <h1>Every image<br>deserves<br><em>a gallery.</em></h1>
-      <p class="hero-description">
-        何気ない一枚も、誰かにとっては特別な作品。<br>
-        あなたの写真を、ひとつの美術館へ。<br>
+  <section class="shell hero">
+    <div class="herotext">
+      <div class="eyebrow">A GALLERY FOR YOUR MOMENTS</div>
+      <h1>
+        <span>何気ない一枚を、</span>
+        <span><em>美術館へ。</em></span>
+      </h1>
+      <p class="lead">
         ここから、あなただけの展覧会が始まります。
       </p>
-      <div class="hero-actions">
-        <button class="dark-btn" onclick="scrollToUpload()">作品を展示する &nbsp; ↗</button>
-        <button class="text-link" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">ABOUT THE GALLERY</button>
-      </div>
+      <button class="cta" id="toUpload">
+        作品を展示する <span>↗</span>
+      </button>
+      <div class="herofoot">PRIVATE EXHIBITION / NO. 001</div>
     </div>
-    <div class="hero-visual">
-      <div class="visual-number">COLLECTION / 001</div>
-      <div class="visual-frame">
-        <div class="visual-inner" id="heroVisual">
-          <div class="visual-placeholder"></div>
+
+    <div class="heroart" aria-label="額縁のある展示空間のイメージ">
+      <div class="artnum">01 / GALLERY</div>
+      <div class="hero-frame">
+        <div class="hero-frame-inner" id="heroImage">
+          <div class="sample-art">
+            余白に、<br>一枚の物語。
+          </div>
         </div>
       </div>
-      <div class="visual-floor"></div>
-      <div class="visual-caption">
-        AN IMAGE BECOMES ART<br>
-        WHEN SOMEONE STOPS TO LOOK.
+      <div class="hero-floor"></div>
+      <div class="arttag">
+        AN ORDINARY MOMENT<br>
+        AS AN EXTRAORDINARY WORK.
       </div>
     </div>
-  </main>
+  </section>
 
-  <div class="marquee">
-    <span>YOUR IMAGE.</span>
-    <span>YOUR EXHIBITION.</span>
-    <span>YOUR MOMENT.</span>
+  <div class="strip shell">
+    <span>一枚から始まる展示</span>
+    <span>あなたの作品が主役</span>
+    <span>思いがけない来場者たち</span>
     <span>EST. 2026</span>
   </div>
 
-  <section class="intro" id="about">
+  <section class="intro shell">
     <div>
-      <div class="small-label">01 / THE CONCEPT</div>
-      <h2>Art begins<br>with <em>your eye.</em></h2>
+      <div class="eyebrow">この美術館について</div>
+      <h2>あなたの写真に、<br>鑑賞する人がいる。</h2>
     </div>
     <div>
       <p>
-        特別なカメラも、難しい技術も必要ありません。<br>
-        大切なのは、あなたがその瞬間を残したいと思ったこと。
+        写真を一枚選ぶだけ。作品の前に人が集まり、
+        じっと眺めたり、カメラを向けたり。
+        反響が大きい展示では、記念撮影をする人まで現れます。
       </p>
       <p>
-        一枚の写真を展示すると、仮想の美術館に人々が訪れ、
-        作品の前で足を止めます。ときには写真を撮り、
-        ときには誰かが作品と一緒に記念撮影をします。
-      </p>
-      <p>
-        あなたの写真が主役になる、ほんの少し特別な体験です。
+        小さな展示室で、あなたの一枚がどんな人気を集めるか。
+        映像の中で楽しんでください。
       </p>
     </div>
   </section>
 
-  <section class="upload-section" id="upload">
-    <div class="upload-heading">
-      <div class="small-label">02 / CREATE YOUR EXHIBITION</div>
-      <h2>Curate your moment.</h2>
-      <p>あなたの作品を選んで、展覧会を開きましょう。</p>
-    </div>
-    <div class="upload-layout">
-      <label class="upload-preview" for="photoInput">
-        <div class="upload-art">
-          <div class="upload-art-inner" id="uploadVisual">
-            ＋<br>SELECT AN IMAGE<br>写真を選択
+  <!-- 写真登録 -->
+  <section class="upload" id="upload">
+    <div class="shell">
+      <div class="uploadheader">
+        <div class="eyebrow">あなたの展覧会をひらく</div>
+        <h2>展示する、一枚を。</h2>
+        <p>好きな写真やイラストを選んでください。</p>
+      </div>
+
+      <div class="uploadgrid">
+        <label for="photoInput" class="previewbox">
+          <div class="previewframe">
+            <div class="previewinside" id="photoPreview">
+              ＋<br>ここを押して写真を選ぶ
+            </div>
           </div>
+        </label>
+
+        <div class="inputpane">
+          <div class="eyebrow">展示作品の登録</div>
+          <h3>作品について</h3>
+
+          <input id="photoInput" type="file" accept="image/*" hidden>
+
+          <label class="fieldname" for="titleInput">
+            作品名
+          </label>
+          <input class="field" id="titleInput" maxlength="50"
+                 placeholder="例：あの日の午後">
+
+          <label class="fieldname" for="descriptionInput">
+            作品のひとこと（任意）
+          </label>
+          <textarea class="field" id="descriptionInput"
+                    maxlength="140"
+                    placeholder="作品に込めた思いなど"></textarea>
+
+          <button class="cta" id="startBtn">
+            展覧会を開く <span>↗</span>
+          </button>
+
+          <p class="notice">
+            ※画像はブラウザ内で使用します。
+            来場者数や反響は、実際のアクセス数や写真の品質評価ではなく、
+            ランダムな演出です。
+          </p>
         </div>
-      </label>
-      <div class="upload-fields">
-        <div class="small-label">EXHIBITION DETAILS</div>
-        <h3>Your artwork.</h3>
-        <input type="file" id="photoInput" accept="image/*">
-        <label class="field-label" for="artTitle">01 — TITLE</label>
-        <input class="field" id="artTitle" maxlength="50" placeholder="作品のタイトル">
-        <label class="field-label" for="description">02 — DESCRIPTION</label>
-        <textarea class="field" id="description" maxlength="200" placeholder="作品についての言葉を添える（任意）"></textarea>
-        <button class="dark-btn" id="startButton" style="margin-top:32px">
-          OPEN THE EXHIBITION &nbsp; ↗
-        </button>
-        <p class="upload-note">
-          写真はブラウザ内で使用します。<br>
-          来場者数や評価はエンターテインメント用の架空の結果です。
-        </p>
       </div>
     </div>
   </section>
 
-  <footer>
-    <span>ATELIER — YOUR PRIVATE GALLERY</span>
-    <span>AN EXPERIMENT IN ART & IMAGINATION.</span>
+  <footer class="shell sitefoot">
+    <span>余白の美術館 — YOUR PRIVATE EXHIBITION</span>
+    <span>MADE FOR THE MOMENTS YOU LOVE.</span>
   </footer>
-</section>
+</div>
 
-<!-- 3D MUSEUM -->
-<section id="museum" class="screen">
+<!-- 3D美術館 -->
+<section id="gallery" class="screen" aria-label="3D美術館">
   <canvas id="scene"></canvas>
-  <div class="museum-top">
-    <div class="brand">ATELIER.</div>
-    <div class="small-label">PRIVATE EXHIBITION / NOW VIEWING</div>
-  </div>
-  <div class="museum-bottom" id="museumMessage">
-    ENTERING THE GALLERY...
-  </div>
-  <div class="flash" id="flash"></div>
-</section>
 
-<!-- RESULT -->
-<section id="result" class="screen">
-  <header class="nav">
-    <div class="brand">ATELIER.</div>
-    <div class="small-label">EXHIBITION REPORT</div>
-  </header>
-  <div class="result-wrap">
-    <div class="result-header">
-      <span class="small-label">THE PRIVATE COLLECTION</span>
-      <span class="small-label">EXHIBITION NO. 001</span>
-    </div>
-    <h1 class="result-title">
-      A moment worth<br><em>remembering.</em>
-    </h1>
-    <div class="result-grid">
-      <div class="result-image-wrap">
-        <img id="resultPhoto" class="result-image" alt="展示作品">
-      </div>
-      <div class="result-info">
-        <div class="small-label">FEATURED ARTWORK</div>
-        <h3 id="resultTitle"></h3>
-        <p id="resultDescription"></p>
-        <div class="result-divider"></div>
-        <div class="small-label">TOTAL VISITORS</div>
-        <div class="visitor-number" id="visitorCount">0</div>
-        <p>VISITORS TO YOUR EXHIBITION</p>
-        <div class="result-divider"></div>
-        <div class="small-label">CURATOR'S NOTE</div>
-        <p id="curatorNote"></p>
-        <div class="result-actions">
-          <button class="dark-btn" id="shareButton">SHARE ON X ↗</button>
-          <button class="outline-btn" id="copyButton">COPY TEXT & LINK</button>
-          <button class="outline-btn" id="retryButton">NEW EXHIBITION</button>
-        </div>
-      </div>
-    </div>
-    <p class="result-footnote">
-      来場者数・展示評価はゲームとして生成した架空の結果です。<br>
-      Xへの投稿には画像が自動添付されません。リンク先はサイトのトップページです。
-    </p>
+  <div class="scene-ui scene-top">
+    <div class="brand">余白の美術館.</div>
+    <div class="scene-sub">ただいま開催中の展覧会</div>
   </div>
+
+  <div class="scene-ui scene-side">
+    <small>本日の来場者</small>
+    <strong id="liveCount">0</strong>
+    <small id="liveStatus">開館準備中</small>
+  </div>
+
+  <div class="scene-ui scene-bottom" id="sceneCaption" aria-live="polite">
+    展示室へ向かっています…
+  </div>
+
+  <button id="skipBtn" class="skip" hidden>
+    結果を見る ↗
+  </button>
+
+  <div id="reaction" class="reaction" aria-live="polite"></div>
+  <div class="flash" id="flash"></div>
+
+  <!-- 展示室内に表示する結果 -->
+  <aside id="report" class="report" hidden>
+    <div class="eyebrow">EXHIBITION REPORT</div>
+    <h2 id="reportTitle">本日の展覧会</h2>
+    <div class="report-rule"></div>
+
+    <div class="eyebrow">本日の来場者</div>
+    <div id="totalCount" class="big">0 人</div>
+    <p id="reportText"></p>
+
+    <div class="report-buttons">
+      <button id="shareBtn">Xに投稿 ↗</button>
+      <button class="light" id="copyBtn">文とURLをコピー</button>
+      <button class="light" id="saveBtn">結果画像を保存</button>
+      <button class="light" id="againBtn">もう一度展示</button>
+    </div>
+
+    <div class="micro">
+      ※来場者数や反応はゲームの演出です。
+      写真を含む展示への個別リンクは生成されません。
+    </div>
+  </aside>
 </section>
 
 <script type="module">
 import * as THREE from
-"https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js";
+'https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.module.js';
 
 const $ = id => document.getElementById(id);
-let photoData = "";
-let exhibition = null;
-let renderer,scene,camera,clock,artTexture;
-let people = [];
-let running = false;
-let frameHandle = null;
+
+let imageData = '';
+let imageBitmap = null;
+let exhibit = null;
+let scene, camera, renderer, clock, frame;
+let active = false;
+let time = 0;
+let nextSpawn = 7;
+let spawned = 0;
+let visitors = [];
 let timers = [];
-let previousTime = 0;
-let showTime = 0;
-let visitCounter = 0;
+let artTexture = null;
+let artMat = null;
+let overlayTimer;
+let lastFlash = 0;
 
-window.scrollToUpload = () =>
-  $("upload").scrollIntoView({behavior:"smooth"});
+const clamp = THREE.MathUtils.clamp;
+const lerp = THREE.MathUtils.lerp;
+const rnd = (a,b) => Math.random()*(b-a)+a;
 
-function screen(id){
-  document.querySelectorAll(".screen").forEach(s=>{
-    s.classList.toggle("active",s.id===id);
+const sleep = (fn,ms) => {
+  const id = setTimeout(fn,ms);
+  timers.push(id);
+};
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>{
+    s.classList.toggle('active',s.id===id);
   });
   window.scrollTo(0,0);
 }
-function delay(fn,ms){
-  timers.push(setTimeout(fn,ms));
-}
-function random(a,b){
-  return Math.floor(Math.random()*(b-a+1))+a;
-}
-function clearTimers(){
-  timers.forEach(clearTimeout);
-  timers=[];
-}
-function makeImage(url){
-  const img=document.createElement("img");
-  img.src=url;
-  img.alt="選択した写真";
-  return img;
-}
-$("photoInput").addEventListener("change",e=>{
-  const file=e.target.files[0];
+
+$('toUpload').onclick = () =>
+  $('upload').scrollIntoView({behavior:'smooth'});
+
+/* 写真の読み込み */
+$('photoInput').addEventListener('change',async e=>{
+  const file=e.target.files?.[0];
   if(!file)return;
-  if(!file.type.startsWith("image/")){
-    alert("画像を選択してください。");
+
+  if(!file.type.startsWith('image/')){
+    alert('画像ファイルを選んでください。');
     return;
   }
-  if(file.size>20*1024*1024){
-    alert("20MB以下の画像を選んでください。");
+  if(file.size>25*1024*1024){
+    alert('25MB以下の画像を選択してください。');
     return;
   }
-  const reader=new FileReader();
-  reader.onload=()=>{
-    photoData=reader.result;
-    $("uploadVisual").replaceChildren(makeImage(photoData));
-    $("heroVisual").replaceChildren(makeImage(photoData));
-  };
-  reader.readAsDataURL(file);
+
+  const url=URL.createObjectURL(file);
+  const img=new Image();
+
+  try{
+    await new Promise((resolve,reject)=>{
+      img.onload=resolve;
+      img.onerror=reject;
+      img.src=url;
+    });
+
+    const max=2000;
+    const scale=Math.min(
+      1,max/Math.max(img.naturalWidth,img.naturalHeight)
+    );
+
+    const canvas=document.createElement('canvas');
+    canvas.width=Math.round(img.naturalWidth*scale);
+    canvas.height=Math.round(img.naturalHeight*scale);
+
+    canvas.getContext('2d').drawImage(
+      img,0,0,canvas.width,canvas.height
+    );
+
+    imageData=canvas.toDataURL('image/jpeg',.92);
+    imageBitmap={w:canvas.width,h:canvas.height};
+
+    for(const id of ['photoPreview','heroImage']){
+      const element=document.createElement('img');
+      element.src=imageData;
+      element.alt='選んだ写真';
+      $(id).replaceChildren(element);
+    }
+  }catch(err){
+    console.error(err);
+    alert('写真を読み込めませんでした。JPEGやPNGでお試しください。');
+  }finally{
+    URL.revokeObjectURL(url);
+  }
 });
-function createExhibition(){
-  const rating=random(65,100);
-  const visitors=random(90,240)+Math.round((rating-65)*13);
-  return{
-    title:$("artTitle").value.trim()||"Untitled",
-    description:$("description").value.trim(),
-    rating,
-    visitors,
-    photoFans:rating>=82,
-    popular:rating>=90
-  };
+
+/* 立体物を作る関数 */
+const mat=(c,metal=0,rough=.9)=>
+  new THREE.MeshStandardMaterial({
+    color:c,metalness:metal,roughness:rough
+  });
+
+function cube(parent,x,y,z,w,h,d,m){
+  const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);
+  o.position.set(x,y,z);
+  o.castShadow=true;
+  o.receiveShadow=true;
+  parent.add(o);
+  return o;
 }
-function material(color,roughness=1){
-  return new THREE.MeshStandardMaterial({color,roughness});
-}
-function mesh(geo,mat,x=0,y=0,z=0,parent=scene){
-  const m=new THREE.Mesh(geo,mat);
-  m.position.set(x,y,z);
-  m.castShadow=true;
-  m.receiveShadow=true;
-  parent.add(m);
-  return m;
-}
-function box(w,h,d,color,x,y,z,parent=scene){
-  return mesh(
-    new THREE.BoxGeometry(w,h,d),
-    material(color),x,y,z,parent
+
+function ball(parent,x,y,z,w,h,d,m){
+  const o=new THREE.Mesh(
+    new THREE.SphereGeometry(1,16,12),m
   );
+  o.scale.set(w,h,d);
+  o.position.set(x,y,z);
+  o.castShadow=true;
+  o.receiveShadow=true;
+  parent.add(o);
+  return o;
 }
-function cylinder(rt,rb,h,color,x,y,z,parent=scene){
-  return mesh(
-    new THREE.CylinderGeometry(rt,rb,h,12),
-    material(color),x,y,z,parent
+
+function cyl(parent,x,y,z,r1,r2,h,m){
+  const o=new THREE.Mesh(
+    new THREE.CylinderGeometry(r1,r2,h,12),m
   );
+  o.position.set(x,y,z);
+  o.castShadow=true;
+  o.receiveShadow=true;
+  parent.add(o);
+  return o;
 }
-function sphere(r,color,x,y,z,parent=scene){
-  return mesh(
-    new THREE.SphereGeometry(r,16,12),
-    material(color),x,y,z,parent
-  );
-}
-function buildGallery(){
+
+/* 美術館の3D空間 */
+function buildRoom(){
   scene=new THREE.Scene();
-  scene.background=new THREE.Color("#bbb1a3");
-  scene.fog=new THREE.Fog("#bbb1a3",15,37);
+  scene.background=new THREE.Color('#bdb8ae');
+  scene.fog=new THREE.Fog('#bdb8ae',20,52);
 
   camera=new THREE.PerspectiveCamera(
-    48,innerWidth/innerHeight,.1,100
+    48,innerWidth/innerHeight,.1,120
   );
-  camera.position.set(0,2.25,17);
-  camera.lookAt(0,2.3,-6.8);
+  camera.position.set(0,2.65,18);
+  camera.lookAt(0,3,-11);
 
   renderer=new THREE.WebGLRenderer({
-    canvas:$("scene"),antialias:true
+    canvas:$('scene'),
+    antialias:true,
+    preserveDrawingBuffer:true,
+    powerPreference:'high-performance'
   });
+
   renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));
   renderer.setSize(innerWidth,innerHeight);
-  renderer.shadowMap.enabled=true;
-  renderer.shadowMap.type=THREE.PCFSoftShadowMap;
   renderer.outputColorSpace=THREE.SRGBColorSpace;
   renderer.toneMapping=THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure=1.5;
+  renderer.toneMappingExposure=1.35;
+  renderer.shadowMap.enabled=true;
+  renderer.shadowMap.type=THREE.PCFSoftShadowMap;
 
-  scene.add(new THREE.HemisphereLight("#fff4e4","#65584b",2.0));
+  clock=new THREE.Clock();
 
-  const sun=new THREE.DirectionalLight("#fff1d8",2.3);
-  sun.position.set(-3,8,5);
-  sun.castShadow=true;
-  sun.shadow.mapSize.set(1024,1024);
-  sun.shadow.camera.left=-12;
-  sun.shadow.camera.right=12;
-  sun.shadow.camera.top=12;
-  sun.shadow.camera.bottom=-12;
-  scene.add(sun);
+  scene.add(new THREE.HemisphereLight(
+    '#fff8e9','#655d51',2.3
+  ));
 
-  // Architectural gallery
-  box(17,.3,27,"#b9b0a3",0,-.15,0);
-  box(17,.3,27,"#e1d9cb",0,7.1,0);
-  box(17,7,.3,"#d8d0c3",0,3.5,-11);
-  box(.3,7,27,"#d1c8ba",-8.5,3.5,0);
-  box(.3,7,27,"#d1c8ba",8.5,3.5,0);
+  const main=new THREE.DirectionalLight('#fff4e0',2.1);
+  main.position.set(-3,9,4);
+  main.castShadow=true;
+  main.shadow.mapSize.set(1024,1024);
+  main.shadow.camera.left=-15;
+  main.shadow.camera.right=15;
+  main.shadow.camera.top=15;
+  main.shadow.camera.bottom=-15;
+  scene.add(main);
 
-  // Decorative wall panels
-  for(let x of [-6.3,-3.8,3.8,6.3]){
-    box(.06,6,.12,"#b9ad9d",x,3.4,-10.8);
+  const floorMat=mat('#bcb5a9',.13,.58);
+  const wallMat=mat('#d9d4ca');
+  const ceilingMat=mat('#e4dfd5');
+  const dark=mat('#666256');
+  const bronze=mat('#857158',.55,.34);
+  const inner=mat('#eee9df');
+
+  /* 床・壁・天井 */
+  cube(scene,0,-.15,0,17,.3,33,floorMat);
+  cube(scene,0,7.3,0,17,.25,33,ceilingMat);
+  cube(scene,0,3.5,-13,17,7,.35,wallMat);
+  cube(scene,-8.5,3.5,0,.35,7,33,wallMat);
+  cube(scene,8.5,3.5,0,.35,7,33,wallMat);
+
+  /* 床の目地と壁の装飾 */
+  const grout=mat('#a89f93');
+
+  for(let x=-8;x<=8;x+=2){
+    cube(scene,x,.015,0,.02,.02,32,grout);
   }
-  box(17,.16,.35,"#9c9183",0,.17,-10.8);
-  box(17,.12,.35,"#e8dfd0",0,6.65,-10.8);
+  for(let z=-15;z<=16;z+=2){
+    cube(scene,0,.017,z,17,.02,.02,grout);
+  }
 
-  // Floor tiles
-  for(let x=-7;x<=7;x+=2){
-    for(let z=-10;z<=12;z+=2){
-      box(1.97,.015,1.97,
-        (Math.round((x+z)/2)%2===0)?"#b9afa1":"#b4a99a",
-        x,-.005,z);
+  for(let x of [-6.5,-4.8,4.8,6.5]){
+    cube(scene,x,3.5,-12.77,.045,5.75,.12,inner);
+  }
+
+  cube(scene,0,.35,-12.76,17,.15,.2,inner);
+  cube(scene,0,6.6,-12.76,17,.18,.24,inner);
+
+  /* 側面の額縁 */
+  for(let z of [-8,-2,4]){
+    for(const s of [-1,1]){
+      cube(scene,s*8.25,3.5,z,.12,2.8,1.9,bronze);
+      cube(scene,s*8.14,3.5,z,.12,2.53,1.65,inner);
     }
   }
 
-  // Ceiling tracks
-  for(let x of [-3,3]){
-    box(.08,.08,22,"#544e46",x,6.86,0);
-    for(let z of [-7,-3,1,5]){
-      cylinder(.13,.13,.28,"#393834",x,6.63,z);
-      const light=new THREE.SpotLight("#ffe5b5",25,16,.55,.7);
-      light.position.set(x,6.45,z);
-      light.target.position.set(x*.45,1,-9);
+  /* 写真の縦横比に合わせて展示 */
+  const r=clamp(imageBitmap.w/imageBitmap.h,.4,2.2);
+  const artW=r>=1?4.2:3.4*r;
+  const artH=r>=1?4.2/r:3.4;
+
+  const bw=artW+.55;
+  const bh=artH+.55;
+  const cy=3.8;
+
+  cube(scene,0,cy,-12.58,bw+.14,bh+.14,.22,bronze);
+  cube(
+    scene,0,cy,-12.40,bw,bh,.13,
+    mat('#b2a087',.3,.45)
+  );
+  cube(
+    scene,0,cy,-12.30,artW+.22,artH+.22,.1,inner
+  );
+
+  const tex=new THREE.TextureLoader().load(imageData);
+  tex.colorSpace=THREE.SRGBColorSpace;
+  tex.anisotropy=renderer.capabilities.getMaxAnisotropy();
+  artTexture=tex;
+
+  artMat=new THREE.MeshBasicMaterial({map:tex});
+
+  const artwork=new THREE.Mesh(
+    new THREE.PlaneGeometry(artW,artH),artMat
+  );
+  artwork.position.set(0,cy,-12.23);
+  scene.add(artwork);
+
+  /* 作品プレート */
+  cube(
+    scene,0,1.35,-12.6,2,.28,.12,
+    mat('#c6b996',.4,.55)
+  );
+
+  /* 天井照明 */
+  for(const x of [-3.5,0,3.5]){
+    cube(scene,x,7.02,-6,.07,.06,18,dark);
+
+    for(let z of [-9,-3,3]){
+      cyl(scene,x,6.85,z,.13,.13,.35,dark);
+
+      const light=new THREE.SpotLight(
+        '#ffe8bd',
+        x===0&&z===-9?26:13,
+        22,.5,.68,1
+      );
+
+      light.position.set(x,6.7,z);
+      light.target.position.set(x*.16,3,-12);
       scene.add(light,light.target);
     }
   }
 
-  // Display wall, frame and photo
-  box(5.2,4.45,.15,"#9b805b",0,3.75,-10.47);
-  box(4.85,4.12,.17,"#d5c2a1",0,3.75,-10.33);
-  box(4.55,3.83,.17,"#6d5136",0,3.75,-10.18);
-  box(4.28,3.55,.18,"#f2ece0",0,3.75,-10.02);
-
-  const tex=new THREE.TextureLoader().load(photoData);
-  tex.colorSpace=THREE.SRGBColorSpace;
-  artTexture=tex;
-  const art=mesh(
-    new THREE.PlaneGeometry(4.02,3.29),
-    new THREE.MeshBasicMaterial({map:tex,side:THREE.DoubleSide}),
-    0,3.75,-9.915
-  );
-  art.castShadow=false;
-
-  // Artwork label
-  box(1.9,.32,.07,"#d4c4a4",0,1.02,-10.32);
-
-  // Sculptural benches
-  box(2.4,.17,.65,"#756452",-5.6,.65,-3);
-  box(.18,.6,.6,"#756452",-6.5,.3,-3);
-  box(.18,.6,.6,"#756452",-4.7,.3,-3);
-
-  people=[];
-  clock=new THREE.Clock();
+  /* 石のベンチ */
+  for(const s of [-1,1]){
+    cube(
+      scene,s*5.8,.65,-3,2.3,.16,.8,
+      mat('#77766f')
+    );
+    cube(scene,s*6.6,.31,-3,.16,.63,.7,dark);
+    cube(scene,s*5,.31,-3,.16,.63,.7,dark);
+  }
 }
-function createHuman(i){
+
+/* 顔のない立体的な来場者モデル */
+function newPerson(index){
   const root=new THREE.Group();
   scene.add(root);
-  const colors=["#24272a","#343332","#47413e","#353d42","#554b43"];
-  const c=colors[i%colors.length];
 
-  // Volumetric faceless silhouette
-  sphere(.24,c,0,1.66,0,root);
-  const neck=cylinder(.105,.12,.18,c,0,1.43,0,root);
-  const torso=mesh(
-    new THREE.CapsuleGeometry(.30,.66,5,10),
-    material(c),0,1.06,0,root
+  const coats=[
+    '#2b302e','#34383a','#47443e',
+    '#464b49','#5e554f','#353c3a'
+  ];
+
+  const jacket=mat(coats[index%coats.length],.05,.94);
+  const skin=mat('#484844',0,.98);
+  const pants=mat(
+    index%2?'#252b2d':'#353732'
   );
-  torso.scale.set(1.05,1,.65);
-  sphere(.28,c,0,.65,0,root);
+  const phoneMat=mat('#101515',.2,.3);
 
-  const arms=[],legs=[];
+  const torso=new THREE.Group();
+  root.add(torso);
+
+  /* 胴体・首・頭 */
+  ball(torso,0,1.05,0,.33,.48,.21,jacket);
+  ball(torso,0,1.49,0,.12,.12,.115,skin);
+  ball(torso,0,1.71,0,.225,.26,.225,skin);
+
+  /* 顔のパーツは作らない */
+
+  /* 肩・肘・腕 */
+  const arms=[];
+
   for(const side of [-1,1]){
-    const arm=new THREE.Group();
-    arm.position.set(side*.33,1.35,0);
-    root.add(arm);
-    cylinder(.105,.075,.64,c,0,-.31,0,arm);
-    sphere(.095,c,0,-.67,0,arm);
-    arms.push(arm);
+    const shoulder=new THREE.Group();
+    shoulder.position.set(side*.32,1.34,0);
+    torso.add(shoulder);
 
-    const leg=new THREE.Group();
-    leg.position.set(side*.15,.61,0);
-    root.add(leg);
-    cylinder(.125,.09,.57,c,0,-.28,0,leg);
-    box(.2,.12,.35,c,0,-.61,.08,leg);
-    legs.push(leg);
+    ball(
+      shoulder,0,-.24,0,
+      .12,.30,.12,jacket
+    );
+
+    const elbow=new THREE.Group();
+    elbow.position.y=-.48;
+    shoulder.add(elbow);
+
+    ball(
+      elbow,0,-.20,0,
+      .095,.23,.095,jacket
+    );
+    ball(
+      elbow,0,-.42,0,
+      .088,.095,.085,skin
+    );
+
+    arms.push({shoulder,elbow,side});
   }
 
-  const phone=box(.17,.28,.04,"#151617",0,-.42,.23,arms[1]);
+  /* 股関節・膝・脚 */
+  const legs=[];
+
+  for(const side of [-1,1]){
+    const hip=new THREE.Group();
+    hip.position.set(side*.16,.68,0);
+    root.add(hip);
+
+    ball(
+      hip,0,-.2,0,
+      .14,.29,.145,pants
+    );
+
+    const knee=new THREE.Group();
+    knee.position.y=-.4;
+    hip.add(knee);
+
+    ball(
+      knee,0,-.17,0,
+      .115,.23,.11,pants
+    );
+
+    cube(
+      knee,0,-.4,.12,
+      .21,.12,.37,pants
+    );
+
+    legs.push({hip,knee});
+  }
+
+  /* スマホ */
+  const phone=new THREE.Group();
+  arms[1].elbow.add(phone);
+  phone.position.set(0,-.48,.04);
+
+  cube(
+    phone,0,0,.03,
+    .17,.27,.035,phoneMat
+  );
   phone.visible=false;
 
-  root.scale.setScalar(.85+(i%4)*.045);
+  const a=index*.73;
+  const edge=index%2?-1:1;
+
   root.position.set(
-    (i%2===0?-1:1)*(2.0+(i%5)*.58),
-    0,8+i*.55
+    edge*(5.7+rnd(0,1)),
+    0,
+    4.5+rnd(0,3)
+  );
+
+  root.scale.setScalar(.88+rnd(-.08,.1));
+
+  const target=new THREE.Vector3(
+    edge*(1.3+(index%6)*.8),
+    0,
+    -5+(index%4)*1.1
   );
 
   return{
-    root,arms,legs,phone,
-    startX:root.position.x,
-    startZ:root.position.z,
-    targetX:(i%2===0?-1:1)*(1.1+(i%5)*.72),
-    targetZ:-3+(i%4)*1.1,
-    speed:.35+(i%3)*.12,
-    state:"enter",
-    seed:i*1.73,
-    photographer:false,
-    posing:false
+    root,torso,arms,legs,phone,
+    state:'walk',
+    action:'view',
+    target,
+    speed:rnd(2.0,2.65),
+    phase:a,
+    actionTime:0,
+    modeTime:0
   };
 }
-function addPerson(i){
-  const p=createHuman(i);
-  people.push(p);
-}
-function updatePeople(dt,t){
-  people.forEach((p,i)=>{
-    if(p.state==="enter"){
-      const dx=p.targetX-p.root.position.x;
-      const dz=p.targetZ-p.root.position.z;
-      const dist=Math.hypot(dx,dz);
-      if(dist>.09){
-        const step=Math.min(dist,p.speed*dt);
-        p.root.position.x+=dx/dist*step;
-        p.root.position.z+=dz/dist*step;
-        p.root.rotation.y=Math.atan2(-dx,-dz);
-        p.legs[0].rotation.x=Math.sin(t*7+p.seed)*.35;
-        p.legs[1].rotation.x=-Math.sin(t*7+p.seed)*.35;
-        p.arms[0].rotation.x=-Math.sin(t*7+p.seed)*.17;
-        p.arms[1].rotation.x=Math.sin(t*7+p.seed)*.17;
-      }else{
-        p.state="view";
-      }
-    }else{
-      p.root.rotation.y+=(0-p.root.rotation.y)*Math.min(1,dt*2);
-      p.legs.forEach(l=>l.rotation.x*=.85);
-      p.root.rotation.z=Math.sin(t*.7+p.seed)*.009;
-    }
 
-    if(p.photographer){
-      p.arms[0].rotation.x=-1.45;
-      p.arms[1].rotation.x=-1.45;
-      p.phone.visible=true;
-    }
-    if(p.posing){
-      p.arms[1].rotation.z=-.4;
-    }
-  });
+/* 作品への反響に応じた行動の抽選 */
+function chooseAction(p){
+  const score=exhibit.score;
+  const heat=exhibit.heat;
+
+  const weights=[
+    ['view',Math.max(7,43-score*.3)],
+    ['photo',8+heat*14],
+    ['selfie',1+heat*17],
+    ['duo',heat>0.33?4+heat*14:0],
+    ['hug',heat>.62?heat*12:0],
+    ['cheer',heat>.45?heat*12:0]
+  ];
+
+  const sum=weights.reduce((a,x)=>a+x[1],0);
+  let v=Math.random()*sum;
+
+  for(const [action,w] of weights){
+    v-=w;
+    if(v<=0)return action;
+  }
+
+  return 'view';
 }
+
+/* 来場者に動作を割り当てる */
+function setAction(p,action){
+  p.action=action;
+  p.actionTime=0;
+  p.modeTime=rnd(3,5)+exhibit.heat*1.2;
+
+  p.phone.visible=[
+    'photo','selfie','duoCamera'
+  ].includes(action);
+
+  if(action==='hug'){
+    p.target.set(rnd(-.5,.5),0,-11.25);
+  }
+
+  if(action==='selfie'){
+    p.target.set(rnd(-2.9,2.9),0,-9.1);
+  }
+
+  if(action==='duo'){
+    p.target.set(rnd(-3.2,3.2),0,-9.6);
+  }
+
+  if(action==='duoCamera'){
+    p.target.set(rnd(-2.4,2.4),0,-5.9);
+  }
+
+  p.state='walk';
+}
+
+/* 反応テキストの表示 */
+function reaction(text){
+  const el=$('reaction');
+  el.textContent=text;
+  el.classList.add('show');
+
+  clearTimeout(overlayTimer);
+
+  overlayTimer=setTimeout(()=>{
+    el.classList.remove('show');
+  },2400);
+}
+
+/* 写真のフラッシュ */
 function flash(){
-  $("flash").classList.remove("fire");
-  void $("flash").offsetWidth;
-  $("flash").classList.add("fire");
+  if(time-lastFlash<1.1)return;
+  lastFlash=time;
+
+  const el=$('flash');
+  el.classList.remove('on');
+  void el.offsetWidth;
+  el.classList.add('on');
 }
+
+/* 人物の歩行・鑑賞・撮影アニメーション */
+function updateVisitor(p,dt,t){
+  p.actionTime+=dt;
+
+  const dx=p.target.x-p.root.position.x;
+  const dz=p.target.z-p.root.position.z;
+  const distance=Math.hypot(dx,dz);
+
+  /* 展示作品へ向かって歩く */
+  if(p.state==='walk'&&distance>.12){
+    const step=Math.min(distance,p.speed*dt);
+
+    p.root.position.x+=dx/distance*step;
+    p.root.position.z+=dz/distance*step;
+
+    p.root.rotation.y=Math.atan2(-dx,-dz);
+
+    const swing=Math.sin(t*9+p.phase);
+
+    p.legs[0].hip.rotation.x=swing*.40;
+    p.legs[1].hip.rotation.x=-swing*.40;
+
+    p.legs[0].knee.rotation.x=
+      Math.max(0,-swing)*.37;
+
+    p.legs[1].knee.rotation.x=
+      Math.max(0,swing)*.37;
+
+    p.arms[0].shoulder.rotation.x=-swing*.22;
+    p.arms[1].shoulder.rotation.x=swing*.22;
+
+    p.torso.position.y=Math.abs(swing)*.025;
+    return;
+  }
+
+  if(p.state==='walk'){
+    p.state='act';
+    p.actionTime=0;
+  }
+
+  /* 立ち止まって作品の方向を見る */
+  p.root.rotation.y=lerp(
+    p.root.rotation.y,0,Math.min(1,dt*2.4)
+  );
+
+  p.torso.position.y=
+    Math.sin(t*1.5+p.phase)*.012;
+
+  p.legs.forEach(l=>{
+    l.hip.rotation.x=
+      lerp(l.hip.rotation.x,0,dt*5);
+    l.knee.rotation.x=
+      lerp(l.knee.rotation.x,0,dt*5);
+  });
+
+  p.arms.forEach(a=>{
+    a.shoulder.rotation.x=
+      lerp(a.shoulder.rotation.x,0,dt*3);
+    a.shoulder.rotation.z=
+      lerp(a.shoulder.rotation.z,0,dt*3);
+    a.elbow.rotation.x=
+      lerp(a.elbow.rotation.x,0,dt*3);
+  });
+
+  p.phone.visible=[
+    'photo','selfie','duoCamera'
+  ].includes(p.action);
+
+  const L=p.arms[0];
+  const R=p.arms[1];
+
+  /* 通常の鑑賞 */
+  if(p.action==='view'){
+    p.torso.rotation.y=
+      Math.sin(t*.7+p.phase)*.035;
+  }
+
+  /* 作品をスマホで撮影 */
+  if(
+    p.action==='photo'||
+    p.action==='duoCamera'
+  ){
+    L.shoulder.rotation.x=-1.35;
+    R.shoulder.rotation.x=-1.35;
+
+    L.shoulder.rotation.z=-.20;
+    R.shoulder.rotation.z=.20;
+
+    L.elbow.rotation.x=-.35;
+    R.elbow.rotation.x=-.35;
+
+    if(p.actionTime>.9&&p.actionTime<1.1){
+      flash();
+    }
+  }
+
+  /* 作品と一緒に自撮り */
+  if(p.action==='selfie'){
+    R.shoulder.rotation.x=-1.42;
+    R.shoulder.rotation.z=-.67;
+    R.elbow.rotation.x=-.32;
+
+    L.shoulder.rotation.z=.35;
+    L.elbow.rotation.x=-.5;
+
+    p.torso.rotation.z=
+      .06*Math.sin(t*2+p.phase);
+
+    if(p.actionTime>1.4&&p.actionTime<1.6){
+      flash();
+    }
+  }
+
+  /* 作品の横に立ってツーショットのポーズ */
+  if(p.action==='duo'){
+    L.shoulder.rotation.z=.25;
+    R.shoulder.rotation.z=-.8;
+    R.elbow.rotation.x=-.2;
+
+    p.torso.rotation.z=Math.sin(t*2)*.05;
+  }
+
+  /* 作品に近づいて抱きつく */
+  if(p.action==='hug'){
+    L.shoulder.rotation.x=-1.65;
+    R.shoulder.rotation.x=-1.65;
+
+    L.shoulder.rotation.z=-.58;
+    R.shoulder.rotation.z=.58;
+
+    p.torso.rotation.x=
+      -.13+Math.sin(t*3)*.025;
+  }
+
+  /* 大喜びする */
+  if(p.action==='cheer'){
+    L.shoulder.rotation.z=.90;
+    R.shoulder.rotation.z=-.90;
+
+    L.shoulder.rotation.x=-.5;
+    R.shoulder.rotation.x=-.5;
+
+    p.torso.position.y=
+      .07+Math.abs(Math.sin(t*5+p.phase))*.075;
+  }
+
+  /* 時間が経ったら別の行動へ */
+  if(p.actionTime>p.modeTime){
+    p.actionTime=0;
+    p.modeTime=rnd(3.5,6);
+
+    const next=chooseAction(p);
+
+    p.target.set(
+      (p.root.position.x<0?-1:1)*rnd(1.3,5.7),
+      0,
+      rnd(-6.8,-3.2)
+    );
+
+    setAction(
+      p,
+      next==='duo'?'photo':next
+    );
+  }
+}
+
+/* 一人ずつ入場する */
+function createWave(){
+  const max=exhibit.maxModels;
+  if(spawned>=max)return;
+
+  const p=newPerson(spawned);
+  visitors.push(p);
+  spawned++;
+
+  const action=chooseAction(p);
+  setAction(
+    p,
+    action==='duo'?'photo':action
+  );
+
+  /* 高評価時は必ずツーショットの組を作る */
+  if(
+    exhibit.heat>.5&&
+    spawned===Math.min(6,max)
+  ){
+    const pose=visitors[
+      Math.max(0,visitors.length-2)
+    ];
+
+    setAction(pose,'duo');
+    setAction(p,'duoCamera');
+
+    pose.target.set(-2.5,0,-10.0);
+    p.target.set(-1.0,0,-5.8);
+
+    reaction('作品の前で、記念撮影が始まりました');
+  }
+
+  /* 特に高評価なら抱きつく人を登場させる */
+  if(
+    exhibit.heat>.73&&
+    spawned===Math.min(11,max)
+  ){
+    setAction(p,'hug');
+    reaction('思わず作品に抱きつく人まで…！');
+  }
+}
+
+/* 来場者数を徐々に増やす */
+function updateHud(){
+  const phase=clamp(
+    (time-5.6)/(exhibit.duration-7),0,1
+  );
+
+  const count=Math.min(
+    exhibit.visitors,
+    Math.floor(
+      exhibit.visitors*
+      (phase*phase*(3-2*phase))
+    )
+  );
+
+  $('liveCount').textContent=
+    count.toLocaleString('ja-JP');
+
+  $('liveStatus').textContent=
+    exhibit.heat>.72?'大反響の展示':
+    exhibit.heat>.4?'注目の展示':
+    'ゆっくり鑑賞中';
+}
+
+/* カメラ移動・人物の更新 */
 function animate(){
-  if(!running)return;
-  frameHandle=requestAnimationFrame(animate);
+  if(!active)return;
+
+  frame=requestAnimationFrame(animate);
+
   const dt=Math.min(clock.getDelta(),.05);
-  showTime+=dt;
-  const t=showTime;
+  time+=dt;
 
-  // Camera dolly, then settle
-  const u=Math.min(1,t/7);
-  const eased=u*u*(3-2*u);
-  camera.position.z=17-11.7*eased;
-  camera.position.y=2.3+.15*eased;
-  camera.position.x=Math.sin(t*.23)*.06;
-  camera.lookAt(0,3.3,-10);
+  const progress=clamp(time/8.5,0,1);
+  const ease=progress*progress*(3-2*progress);
 
-  updatePeople(dt,t);
+  /* 展示室の奥に向かってズームイン */
+  camera.position.set(
+    lerp(0,1.25,ease)+Math.sin(time*.3)*.045,
+    lerp(2.35,2.6,ease),
+    lerp(19,5.2,ease)
+  );
+
+  camera.lookAt(
+    0,lerp(3.15,3.85,ease),-12.5
+  );
+
+  /* 評価が高いほど多くの人を入場させる */
+  if(
+    time>6.6&&
+    time>nextSpawn&&
+    spawned<exhibit.maxModels
+  ){
+    createWave();
+    nextSpawn=
+      time+rnd(.55,1.3)*(1.25-exhibit.heat*.55);
+  }
+
+  for(const p of visitors){
+    updateVisitor(p,dt,time);
+  }
+
+  if(
+    Math.floor(time*2)!==
+    Math.floor((time-dt)*2)
+  ){
+    updateHud();
+  }
+
+  if(
+    time>=exhibit.duration&&
+    $('report').hidden
+  ){
+    finish();
+  }
+
   renderer.render(scene,camera);
 }
-function resize(){
-  if(!renderer||!camera)return;
-  camera.aspect=innerWidth/innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(innerWidth,innerHeight);
-}
-window.addEventListener("resize",resize);
 
-function endScene(){
-  running=false;
-  if(frameHandle)cancelAnimationFrame(frameHandle);
-  clearTimers();
+/* 美術館を終了してメモリを解放 */
+function clearGallery(){
+  active=false;
+
+  if(frame)cancelAnimationFrame(frame);
+
+  timers.forEach(clearTimeout);
+  timers=[];
+  clearTimeout(overlayTimer);
+
   if(scene){
-    scene.traverse(o=>{
-      if(o.geometry)o.geometry.dispose();
-      if(o.material){
-        const mats=Array.isArray(o.material)?o.material:[o.material];
-        mats.forEach(m=>m.dispose());
+    scene.traverse(obj=>{
+      if(obj.geometry)obj.geometry.dispose();
+
+      if(obj.material){
+        const materials=Array.isArray(obj.material)?
+          obj.material:[obj.material];
+
+        materials.forEach(m=>m.dispose());
       }
     });
   }
+
   if(artTexture)artTexture.dispose();
+  artTexture=null;
+
   if(renderer){
     renderer.dispose();
     renderer.forceContextLoss();
     renderer=null;
   }
+
   scene=null;
   camera=null;
-  people=[];
+  visitors=[];
+  spawned=0;
+  time=0;
+  lastFlash=-9;
+
+  $('report').hidden=true;
+  $('skipBtn').hidden=true;
+  $('reaction').classList.remove('show');
 }
+
+/* 展覧会の終了・結果表示 */
+function finish(){
+  if(!$('report').hidden)return;
+
+  $('liveCount').textContent=
+    exhibit.visitors.toLocaleString('ja-JP');
+
+  $('reportTitle').textContent=
+    '「'+exhibit.title+'」の展示記録';
+
+  $('totalCount').textContent=
+    exhibit.visitors.toLocaleString('ja-JP')+' 人';
+
+  let text='来場者は一枚の作品に足を止め、静かに鑑賞していました。';
+
+  if(exhibit.heat>.42){
+    text='作品の前に人が集まり、カメラを向けたり、記念撮影を楽しんだりする姿が見られました。';
+  }
+
+  if(exhibit.heat>.73){
+    text='会場は大盛況。撮影やツーショットだけでなく、作品に駆け寄る人まで現れました。';
+  }
+
+  $('reportText').textContent=text;
+  $('report').hidden=false;
+
+  $('sceneCaption').textContent=
+    '本日の展覧会は、大切な一枚の記録になりました。';
+
+  $('skipBtn').hidden=true;
+}
+
+/* 展覧会を開始 */
 function start(){
-  if(!photoData){
-    alert("まず展示する写真を選んでください。");
+  if(!imageData||!imageBitmap){
+    alert('まず写真を選んでください。');
     return;
   }
-  endScene();
-  exhibition=createExhibition();
-  screen("museum");
-  $("museumMessage").textContent="ENTERING THE GALLERY...";
+
+  clearGallery();
+
+  /* 反響はランダムなゲーム演出 */
+  const score=Math.floor(rnd(59,101));
+  const heat=clamp((score-60)/40,0,1);
+  const visitorCount=Math.floor(
+    90+heat*960+rnd(0,220)
+  );
+
+  exhibit={
+    score,
+    heat,
+    visitors:visitorCount,
+    maxModels:Math.round(5+heat*19),
+    duration:29,
+    title:$('titleInput').value.trim()||'無題',
+    description:$('descriptionInput').value.trim()
+  };
+
+  show('gallery');
+
+  $('sceneCaption').textContent=
+    '展示室に入っていきます…';
+
+  $('liveCount').textContent='0';
+  $('liveStatus').textContent='開館準備中';
 
   try{
-    buildGallery();
+    buildRoom();
   }catch(err){
     console.error(err);
-    alert("3Dの表示に失敗しました。ChromeなどWebGL対応ブラウザでお試しください。");
-    screen("home");
+    alert('3D表示を開始できませんでした。Chromeなどのブラウザをご利用ください。');
+    clearGallery();
+    show('home');
     return;
   }
 
-  running=true;
-  showTime=0;
+  active=true;
+  time=0;
+  spawned=0;
+  nextSpawn=7;
+
+  clock.start();
   animate();
 
-  delay(()=>{
-    $("museumMessage").textContent="THE EXHIBITION IS NOW OPEN";
-  },6500);
+  sleep(()=>{
+    $('skipBtn').hidden=false;
+    $('sceneCaption').textContent=
+      '最初の来場者がやってきました';
+  },6900);
 
-  const number=Math.min(17,Math.max(4,Math.round(exhibition.visitors/38)));
-  for(let i=0;i<number;i++){
-    delay(()=>{
-      if(!running)return;
-      addPerson(i);
-      $("museumMessage").textContent="VISITORS ARE ARRIVING...";
-    },7300+i*650);
-  }
+  sleep(()=>{
+    $('sceneCaption').textContent=
+      '作品の前に、人が集まっています…';
+  },14000);
 
-  const finalArrival=7300+number*650;
+  sleep(()=>{
+    if(exhibit.heat>.42){
+      reaction('写真を撮っている人もいるようです');
+    }
+  },18500);
 
-  if(exhibition.photoFans){
-    delay(()=>{
-      if(!running)return;
-      $("museumMessage").textContent="A VISITOR IS PHOTOGRAPHING THE ARTWORK";
-      const p=people[0];
-      if(p){
-        p.photographer=true;
-        p.state="view";
-      }
-      flash();
-    },finalArrival+1100);
-  }
-
-  if(exhibition.popular){
-    delay(()=>{
-      if(!running)return;
-      $("museumMessage").textContent="A COMMEMORATIVE PHOTO IS BEING TAKEN";
-      if(people[1]){
-        people[1].posing=true;
-        people[1].state="view";
-        people[1].root.position.set(.7,0,-5.1);
-      }
-      if(people[2]){
-        people[2].photographer=true;
-        people[2].state="view";
-        people[2].root.position.set(1.4,0,-1.9);
-      }
-      flash();
-    },finalArrival+3000);
-  }
-
-  delay(showResult,finalArrival+(exhibition.popular?6500:4300));
+  sleep(()=>{
+    if(exhibit.heat>.72){
+      reaction('この作品は大人気！');
+    }
+  },24000);
 }
-function showResult(){
-  if(!exhibition)return;
-  endScene();
-  $("resultPhoto").src=photoData;
-  $("resultTitle").textContent=exhibition.title;
-  $("resultDescription").textContent=exhibition.description;
-  $("visitorCount").textContent=exhibition.visitors.toLocaleString("ja-JP");
-  let note="訪れた人々は静かに作品を眺め、それぞれの時間を過ごしました。";
-  if(exhibition.rating>=82)
-    note="多くの人が作品の前で足を止め、その美しさを写真に収めていました。";
-  if(exhibition.popular)
-    note="作品の前には人々が集まり、記念写真を撮る姿も見られました。忘れられない展覧会となりました。";
-  $("curatorNote").textContent=note;
-  screen("result");
-}
-function shareText(){
-  return `ATELIER — 私の写真展\n`+
-    `作品「${exhibition.title}」を展示しました。\n`+
-    `来場者：${exhibition.visitors}人\n\n`+
-    `#ATELIER美術館 #写真展 #私の美術館`;
-}
-$("startButton").addEventListener("click",start);
-$("retryButton").addEventListener("click",()=>{
-  endScene();
-  screen("home");
+
+/* ボタンの処理 */
+$('startBtn').onclick=start;
+$('skipBtn').onclick=finish;
+
+$('againBtn').onclick=()=>{
+  clearGallery();
+  show('home');
+  $('upload').scrollIntoView({behavior:'instant'});
+};
+
+window.addEventListener('resize',()=>{
+  if(renderer&&camera){
+    camera.aspect=innerWidth/innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth,innerHeight);
+  }
 });
-$("shareButton").addEventListener("click",()=>{
-  if(!exhibition)return;
-  const url="https://twitter.com/intent/tweet?text="+
-    encodeURIComponent(shareText())+
-    "&url="+encodeURIComponent(location.href.split("#")[0]);
-  window.open(url,"_blank","noopener,noreferrer");
-});
-$("copyButton").addEventListener("click",async()=>{
-  if(!exhibition)return;
-  const text=shareText()+"\n"+location.href.split("#")[0];
+
+/* Xへの共有 */
+function share(){
+  return `「${exhibit.title}」を美術館に展示しました。\n`+
+    `本日の来場者：${exhibit.visitors.toLocaleString('ja-JP')}人\n\n`+
+    `#余白の美術館 #写真展 #写真好きな人と繋がりたい`;
+}
+
+$('shareBtn').onclick=()=>{
+  if(!exhibit)return;
+
+  const u=new URL(
+    'https://twitter.com/intent/tweet'
+  );
+
+  u.searchParams.set('text',share());
+  u.searchParams.set(
+    'url',location.href.split('#')[0]
+  );
+
+  window.open(
+    u.toString(),'_blank','noopener,noreferrer'
+  );
+};
+
+$('copyBtn').onclick=async()=>{
+  const text=
+    share()+'\n'+location.href.split('#')[0];
+
   try{
     await navigator.clipboard.writeText(text);
-    alert("投稿文とURLをコピーしました。");
-  }catch(err){
-    const area=document.createElement("textarea");
-    area.value=text;
-    document.body.appendChild(area);
-    area.select();
-    const ok=document.execCommand("copy");
-    area.remove();
-    alert(ok?"コピーしました。":"コピーできませんでした。");
+    alert('投稿文とサイトURLをコピーしました');
+  }catch{
+    const input=document.createElement('textarea');
+    input.value=text;
+    document.body.appendChild(input);
+    input.select();
+
+    const ok=document.execCommand('copy');
+    input.remove();
+
+    alert(
+      ok?'コピーしました':'コピーできませんでした'
+    );
   }
-});
+};
+
+/* 結果画像をPNGで保存 */
+$('saveBtn').onclick=()=>{
+  const c=document.createElement('canvas');
+  c.width=1080;
+  c.height=1350;
+
+  const ctx=c.getContext('2d');
+
+  ctx.fillStyle='#efede8';
+  ctx.fillRect(0,0,c.width,c.height);
+
+  ctx.fillStyle='#343a33';
+  ctx.font='32px serif';
+  ctx.fillText('余白の美術館',85,100);
+
+  ctx.fillStyle='#777a71';
+  ctx.font='21px sans-serif';
+  ctx.fillText(
+    'あなたの一枚を、美術館へ。',85,145
+  );
+
+  const im=new Image();
+
+  im.onload=()=>{
+    const maxW=820;
+    const maxH=850;
+
+    const scale=Math.min(
+      maxW/im.width,
+      maxH/im.height
+    );
+
+    const w=im.width*scale;
+    const h=im.height*scale;
+
+    const x=(1080-w)/2;
+    const y=200+(850-h)/2;
+
+    ctx.fillStyle='#a59172';
+    ctx.fillRect(x-22,y-22,w+44,h+44);
+
+    ctx.fillStyle='#f8f6ef';
+    ctx.fillRect(x-13,y-13,w+26,h+26);
+
+    ctx.drawImage(im,x,y,w,h);
+
+    ctx.fillStyle='#242924';
+    ctx.font='36px serif';
+
+    ctx.fillText(
+      exhibit.title.slice(0,25),85,1145
+    );
+
+    ctx.font='27px sans-serif';
+    ctx.fillText(
+      '来場者 '+
+      exhibit.visitors.toLocaleString('ja-JP')+
+      ' 人',
+      85,1205
+    );
+
+    ctx.fillStyle='#777a71';
+    ctx.font='19px sans-serif';
+    ctx.fillText('#余白の美術館',85,1260);
+
+    const a=document.createElement('a');
+    a.download='わたしの展覧会.png';
+    a.href=c.toDataURL('image/png');
+    a.click();
+  };
+
+  im.src=imageData;
+};
 </script>
 </body>
 </html>
